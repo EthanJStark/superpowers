@@ -15,6 +15,24 @@ This is a **Claude Code plugin** that provides a core skills library. Unlike tra
 - `.claude-plugin/` - Plugin manifest and marketplace configuration
 - `llm/` - Local-only planning documents (NOT tracked by git)
 
+## Branch Strategy
+
+**Main branch serves as source of truth:**
+- Contains company marketplace configuration (marketplace.json)
+- Includes fork-specific plugin identity
+- Company Claude Code marketplace points to this branch
+- Stable and ready for production use
+
+**For upstream contributions:**
+- Create feature branches from main: `pr/NUMBER-cleanup` or `feature/upstream-NAME`
+- Add cleanup commits to remove fork-specific config
+- Submit PR from cleanup branch to obra/superpowers
+- Main branch retains fork identity
+
+**For local development:**
+- Use git worktrees (see Local Development Workflow below)
+- Keeps main stable for marketplace while testing changes
+
 ## Development Workflow
 
 ### Creating New Skills
