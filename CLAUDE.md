@@ -51,6 +51,8 @@ This is a **Claude Code plugin** that provides a core skills library. Unlike tra
 
 ### Local Plugin Development
 
+#### Quick Start
+
 When developing superpowers locally and testing changes in Claude Code:
 
 1. **Edit skills** in `/Users/ethan.stark/dev/claude-code-resources/superpowers/skills/`
@@ -63,6 +65,76 @@ When developing superpowers locally and testing changes in Claude Code:
 4. **Test changes** in a new Claude Code session
 
 **Important:** Plugin changes only take effect after reload. Skills are loaded at session start, so existing sessions won't see updates.
+
+#### Switching Between Local and Marketplace Versions
+
+**Your plugin identifiers:**
+- `superpowers-fork@claude-code-marketplace` - Company marketplace version (published from this repo)
+- `superpowers@superpowers-dev` - Local development version
+
+**Switch TO local development:**
+```bash
+/plugin uninstall superpowers-fork@claude-code-marketplace
+/plugin install superpowers@superpowers-dev
+# Then start new session
+```
+
+**Switch BACK to marketplace:**
+```bash
+/plugin uninstall superpowers@superpowers-dev
+/plugin install superpowers-fork@claude-code-marketplace
+# Then start new session
+```
+
+**After editing local skills:**
+```bash
+# Commit changes (optional but recommended)
+git add -A && git commit -m "your changes"
+
+# Reload plugin (paste both lines together):
+/plugin uninstall superpowers@superpowers-dev
+/plugin install superpowers@superpowers-dev
+
+# Start new Claude Code session to see changes
+```
+
+#### When to Uninstall/Reinstall vs Restart
+
+**How plugin caching works:**
+- Plugin code is cached when installed - changes to source files don't automatically reflect
+- Skills are loaded at session start - they need a new session to load
+- Uninstall/reinstall forces cache refresh and reloads components
+- Restart alone is NOT sufficient - you need uninstall/reinstall
+
+**Decision matrix:**
+
+| Scenario | Action |
+|----------|--------|
+| Changed skill content in source directory | Uninstall → Reinstall → New session |
+| Changed command markdown | Uninstall → Reinstall → New session |
+| Need to test same skill twice | Start new session (no reinstall needed) |
+| Switching between marketplace and local | Uninstall old → Install new → New session |
+| Plugin not appearing in `/help` | Uninstall → Reinstall → New session |
+
+**Always paste both commands together:**
+```bash
+/plugin uninstall superpowers@superpowers-dev
+/plugin install superpowers@superpowers-dev
+```
+
+#### Troubleshooting
+
+**Issue:** Plugin error in `/doctor` output
+- **Cause:** Stale plugin reference in `~/.claude/settings.json`
+- **Fix:** Edit settings.json and remove the stale `enabledPlugins` entry
+
+**Issue:** Script path not found (e.g., `write_plan.py`)
+- **Cause:** Plugin not installed or cache cleared
+- **Fix:** Reinstall plugin from marketplace
+
+**Issue:** Skills don't update after editing
+- **Cause:** Didn't reload plugin or start new session
+- **Fix:** Uninstall → Reinstall → New session
 
 ### PR Creation Safety
 
