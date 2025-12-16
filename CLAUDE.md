@@ -69,12 +69,12 @@ When developing superpowers locally and testing changes in Claude Code:
 #### Switching Between Local and Marketplace Versions
 
 **Your plugin identifiers:**
-- `superpowers-fork@claude-code-marketplace` - Company marketplace version (published from this repo)
+- `superpowers-fork@renaissance-marketplace` - Company marketplace version (published from this repo)
 - `superpowers@superpowers-dev` - Local development version
 
 **Switch TO local development:**
 ```bash
-/plugin uninstall superpowers-fork@claude-code-marketplace
+/plugin uninstall superpowers-fork@renaissance-marketplace
 /plugin install superpowers@superpowers-dev
 # Then start new session
 ```
@@ -82,7 +82,7 @@ When developing superpowers locally and testing changes in Claude Code:
 **Switch BACK to marketplace:**
 ```bash
 /plugin uninstall superpowers@superpowers-dev
-/plugin install superpowers-fork@claude-code-marketplace
+/plugin install superpowers-fork@renaissance-marketplace
 # Then start new session
 ```
 
