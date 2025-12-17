@@ -58,7 +58,7 @@ When developing superpowers locally and testing changes in Claude Code:
 1. **Edit skills** in `/Users/ethan.stark/dev/claude-code-resources/superpowers/skills/`
 2. **Commit changes** to your branch (e.g., `ethan-mod`)
 3. **Reload plugin** to reflect changes in Claude Code (paste both lines):
-   ```
+   ```bash
    /plugin uninstall superpowers@superpowers-dev
    /plugin install superpowers@superpowers-dev
    ```
@@ -203,7 +203,7 @@ git branch -d feature/my-experiment
 
 **Directory and Naming:**
 
-```
+```plaintext
 skills/
   skill-name/           # lowercase-with-hyphens only (no special chars)
     SKILL.md            # Required: main skill content
