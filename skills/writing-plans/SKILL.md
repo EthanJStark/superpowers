@@ -59,6 +59,15 @@ python3 <path-from-step-1> \
 
 **Note:** The target directory structure is workflow-specific. The default assumes an `llm/` directory pattern, but this can be customized for projects with different conventions.
 
+**Config:** Default target directory can be customized in `~/.config/superpowers/config.json`:
+```json
+{
+  "artifacts": {
+    "plans": "your/preferred/path"
+  }
+}
+```
+
 **Note:** After writing, the file will be renamed to `YYMMDDXX-<slug>.md` format by the rename script (where YYMMDD is year/month/day, XX is auto-sequenced). If written to staging area, it must be copied to the working directory's target directory before rename.
 
 ## Bite-Sized Task Granularity
@@ -124,7 +133,7 @@ python3 <path-from-step-1> \
 
 The working directory is shown as "Working directory" in the environment context at the start of each conversation.
 
-**Workflow flexibility:** While the default assumes an `llm/` subdirectory pattern, the scripts now support any directory structure within a git repository. Use `--target-dir` to specify custom locations (e.g., `docs/plans/`, `planning/implementation/`).
+**Workflow flexibility:** Use `--target-dir` to override per-invocation, or set your preferred default in `~/.config/superpowers/config.json`. The default supports an `llm/` subdirectory pattern, but can be customized to match any project convention (e.g., `docs/plans/`, `planning/implementation/`).
 
 **Nested git repositories:** If llm/ is its own git repository (has llm/.git), the tooling automatically finds the parent repository to ensure correct path tracking.
 
