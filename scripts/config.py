@@ -18,11 +18,15 @@ def get_config():
     """Return merged config (user + defaults)."""
     config = DEFAULTS.copy()
     if CONFIG_PATH.exists():
-        with open(CONFIG_PATH) as f:
-            user_config = json.load(f)
-        # Deep merge artifacts section
-        if "artifacts" in user_config:
-            config["artifacts"].update(user_config["artifacts"])
+        try:
+            with open(CONFIG_PATH) as f:
+                user_config = json.load(f)
+            # Deep merge artifacts section
+            if "artifacts" in user_config:
+                config["artifacts"].update(user_config["artifacts"])
+        except (json.JSONDecodeError, KeyError, IOError):
+            # Fallback to defaults on any error
+            pass
     return config
 
 def get_artifact_path(artifact_type: str) -> str:
