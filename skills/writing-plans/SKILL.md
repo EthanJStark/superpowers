@@ -86,7 +86,7 @@ python3 <path-from-step-1> \
 ```markdown
 # [Feature Name] Implementation Plan
 
-> **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
+> **For Claude:** REQUIRED SUB-SKILL: Use superpowers-fork:executing-plans to implement this plan task-by-task.
 
 **Goal:** [One sentence describing what this builds]
 
@@ -280,7 +280,7 @@ If you caught yourself thinking:
 - "Plan already exists, let me execute it" → WRONG. writing-plans writes, never executes.
 - "I'll just start the first task" → WRONG. STOP after writing.
 
-**Production incident:** 2025-12-13 - Agent saw existing plan, decided to execute using superpowers:execute-plan. User had to interrupt: "This is a bug... writing-plans should write and STOP."
+**Production incident:** 2025-12-13 - Agent saw existing plan, decided to execute using superpowers-fork:execute-plan. User had to interrupt: "This is a bug... writing-plans should write and STOP."
 
 **Scope boundaries:**
 - writing-plans = WRITE plans only
@@ -505,7 +505,7 @@ Ask: "Would you like to generate acceptance criteria for this plan? (enables reg
 ```
 Plan complete: llm/implementation-plans/<filename>.md
 
-Next step: Use /superpowers:execute-plan OR open new session with executing-plans skill.
+Next step: Use /superpowers-fork:execute-plan OR open new session with executing-plans skill.
 
 [STOP - writing-plans skill scope ends here]
 ```
