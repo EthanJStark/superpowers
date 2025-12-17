@@ -8,7 +8,22 @@ letting Claude just describe what it would do.
 import sys
 import os
 import argparse
+import json
 from datetime import datetime
+from pathlib import Path
+
+def get_plans_dir():
+    """Get plans directory from config or default."""
+    config_path = Path.home() / ".config" / "superpowers" / "config.json"
+    default = "llm/implementation-plans"
+    if config_path.exists():
+        try:
+            with open(config_path) as f:
+                config = json.load(f)
+            return config.get("artifacts", {}).get("plans", default)
+        except (json.JSONDecodeError, KeyError):
+            pass
+    return default
 
 def main():
     parser = argparse.ArgumentParser(
@@ -31,8 +46,8 @@ def main():
     )
     parser.add_argument(
         "--target-dir",
-        default="llm/implementation-plans",
-        help="Target directory relative to working-dir (default: llm/implementation-plans)"
+        default=get_plans_dir(),
+        help="Target directory relative to working-dir (default: from config or llm/implementation-plans)"
     )
 
     args = parser.parse_args()
