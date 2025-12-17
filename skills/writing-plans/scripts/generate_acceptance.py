@@ -62,8 +62,15 @@ def generate_acceptance(plan_file: Path, output_file: Path = None):
         print("  Expected pattern: ### Task N: Description")
         print("  Generating empty acceptance.json")
 
+    # Resolve plan path relative to output file's parent (working directory)
+    try:
+        plan_path_str = str(plan_file.relative_to(output_file.parent.parent))
+    except ValueError:
+        # Fallback: use absolute path if relative resolution fails
+        plan_path_str = str(plan_file.absolute())
+
     acceptance = {
-        "plan": str(plan_file.relative_to(Path.cwd())),
+        "plan": plan_path_str,
         "generated": date.today().isoformat(),
         "total_features": len(features),
         "passing_features": 0,
