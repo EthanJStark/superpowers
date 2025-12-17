@@ -1,6 +1,6 @@
 ---
 name: writing-plans
-description: Use when design is complete and you need detailed implementation tasks - creates comprehensive plans with exact file paths, complete code examples, and verification steps. CRITICAL - invokes wrapper script that forces file writing - "create a plan" means invoke wrapper and write file, NOT describe in chat. SCOPE - this skill ONLY writes plans, never executes them. Mechanically enforced via lock file (attempting bypass = error).
+description: Use when design is complete and you need detailed implementation tasks - creates comprehensive plans with exact file paths, complete code examples, and verification steps. All artifacts (plan, acceptance, progress) share YYMMDD-XX prefix to prevent overwrites. CRITICAL - invokes wrapper script that forces file writing - "create a plan" means invoke wrapper and write file, NOT describe in chat. SCOPE - this skill ONLY writes plans, never executes them. Mechanically enforced via lock file (attempting bypass = error).
 ---
 
 # Writing Plans
@@ -288,6 +288,25 @@ If you caught yourself thinking:
 - writing-plans = WRITE plans only
 - executing-plans = EXECUTE plans only
 - These are separate skills. Never cross boundaries.
+
+### Violation 3: Reverting to generic file names
+
+**Stop. Use prefixed names derived from plan filename.**
+
+If you caught yourself thinking:
+- "Just use acceptance.json, it's simpler" → WRONG. Overwrites previous work.
+- "User can rename later" → WRONG. Files must be correctly named from creation.
+- "Prefixing is optional" → WRONG. Prefixing is required (prevents overwrites).
+- "Only prefix acceptance, not progress" → WRONG. All artifacts share prefix.
+
+| Excuse | Reality |
+|--------|---------|
+| "Generic names are simpler" | Generic names overwrite. Always prefix. |
+| "User didn't ask for prefixing" | Prefixing prevents data loss. Always use. |
+| "Template references target.txt" | Legacy pattern. Ignore - use prefixed names. |
+| "This plan won't have multiple" | Can't predict future. Always prefix. |
+
+**All of these mean: Use derived paths from plan filename. No exceptions.**
 
 ## Post-Write Workflow
 
