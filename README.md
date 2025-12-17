@@ -54,9 +54,9 @@ Check that commands appear:
 
 ```
 # Should see:
-# /superpowers:brainstorm - Interactive design refinement
-# /superpowers:write-plan - Create implementation plan
-# /superpowers:execute-plan - Execute plan in batches
+# /superpowers-fork:brainstorm - Interactive design refinement
+# /superpowers-fork:write-plan - Create implementation plan
+# /superpowers-fork:execute-plan - Execute plan in batches
 ```
 
 ### Codex
