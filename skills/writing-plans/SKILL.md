@@ -479,6 +479,16 @@ Ask: "Would you like to generate acceptance criteria for this plan? (enables reg
 2. Check `.writing-plans-active` exists in working directory
 3. If missing: must invoke wrapper before Write tool
 
+### Path Resolution Issues (generate_acceptance.py)
+
+**Symptom:** ValueError: 'path' is not in the subpath of 'cwd'
+
+**Cause:** Script attempts to resolve plan path relative to current working directory
+
+**Fixed in:** v3.7.1+ - Now resolves relative to output file's parent directory
+
+**Workaround (older versions):** Run script from the working directory, not from elsewhere
+
 ## STOP: Plan Writing Complete
 
 **After completing post-write workflow, STOP. Do NOT execute the plan.**
