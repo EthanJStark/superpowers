@@ -137,8 +137,6 @@ llm/implementation-plans/
 
 **Why:** Prevents overwrites when creating multiple plans. Each plan has its own acceptance criteria and progress log.
 
-**Note:** The progress.md template reference to `llm/target.txt` is legacy. Per-plan progress logs replace the "one active plan" workflow.
-
 ## Path Requirements
 
 - ✅ **ALWAYS use absolute paths**: `<working-directory>/<target-dir>/file.md`
@@ -354,8 +352,6 @@ Output: `<renamed-file>-progress.md` (same directory as plan)
 - Complex implementations
 - When resuming work across sessions
 
-**Legacy note:** The shared `llm/progress.md` workflow (referenced in template as `llm/target.txt`) is deprecated in favor of per-plan progress logs.
-
 ### Step 1: Validate Frontmatter
 
 ```bash
@@ -482,32 +478,6 @@ Ask: "Would you like to generate acceptance criteria for this plan? (enables reg
 1. Verify wrapper script was invoked first (creates lock file)
 2. Check `.writing-plans-active` exists in working directory
 3. If missing: must invoke wrapper before Write tool
-
-## Migration Guide (Existing Workflows)
-
-**If you have existing `llm/acceptance.json` or `llm/progress.md`:**
-
-1. **Identify the associated plan:**
-   ```bash
-   # Check acceptance.json for plan reference
-   jq -r '.plan' llm/acceptance.json
-   ```
-
-2. **Rename to prefixed format:**
-   ```bash
-   # Example: Plan is 251215-02-auth.md
-   mv llm/acceptance.json llm/implementation-plans/251215-02-auth-acceptance.json
-   mv llm/progress.md llm/implementation-plans/251215-02-auth-progress.md
-   ```
-
-3. **Update progress.md plan reference:**
-   - Replace `[See llm/target.txt]` with actual plan path
-   - Verify branch and commit info
-
-**One-time cleanup:** The `llm/target.txt` file is no longer used. Remove if present:
-```bash
-rm -f llm/target.txt
-```
 
 ## STOP: Plan Writing Complete
 
