@@ -1,5 +1,27 @@
 # Changelog - writing-plans Skill
 
+## 2025-12-17 - Per-Plan File Naming
+
+### Added
+- Per-plan file naming: all artifacts share YYMMDD-XX prefix
+- `initialize_progress.py`: Create plan-specific progress logs
+- Auto-derived output paths in `generate_acceptance.py`
+- File naming convention documentation
+
+### Changed
+- `generate_acceptance.py`: Made `--output` optional (defaults to derived path)
+- SKILL.md: Documented prefixed naming convention
+- Progress tracking: Now per-plan instead of shared llm/progress.md
+
+### Fixed
+- Acceptance.json overwrites when creating multiple plans
+- Progress.md overwrites when creating multiple plans
+- Loss of prior work when generating artifacts for new plans
+
+### Breaking Changes
+- None (backward compatible via optional parameters)
+- Legacy workflows still work with explicit `--output` paths
+
 ## 2025-12-16 - Skill Name Reversion
 
 **Changed:** Reverted skill name from `record-plan` back to `writing-plans`

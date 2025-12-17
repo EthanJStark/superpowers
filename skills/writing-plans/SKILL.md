@@ -1,6 +1,6 @@
 ---
 name: writing-plans
-description: Use when design is complete and you need detailed implementation tasks - creates comprehensive plans with exact file paths, complete code examples, and verification steps. CRITICAL - invokes wrapper script that forces file writing - "create a plan" means invoke wrapper and write file, NOT describe in chat. SCOPE - this skill ONLY writes plans, never executes them. Mechanically enforced via lock file (attempting bypass = error).
+description: Use when design is complete and you need detailed implementation tasks - creates comprehensive plans with exact file paths, complete code examples, and verification steps. All artifacts (plan, acceptance, progress) share YYMMDD-XX prefix to prevent overwrites. CRITICAL - invokes wrapper script that forces file writing - "create a plan" means invoke wrapper and write file, NOT describe in chat. SCOPE - this skill ONLY writes plans, never executes them. Mechanically enforced via lock file (attempting bypass = error).
 ---
 
 # Writing Plans
@@ -123,6 +123,19 @@ python3 <path-from-step-1> \
 4. **Header section:** Goal, Architecture, Tech Stack (as shown above)
 
 **If a Jira ticket is referenced** (e.g., NPCP-1234), it will be included at the beginning of the final filename: `YYMMDDXX-NPCP-1234-<slug>.md`
+
+## File Naming Convention
+
+**All plan artifacts use the same YYMMDD-XX prefix:**
+
+```
+llm/implementation-plans/
+  251217-01-auth-implementation.md
+  251217-01-auth-implementation-acceptance.json
+  251217-01-auth-implementation-progress.md
+```
+
+**Why:** Prevents overwrites when creating multiple plans. Each plan has its own acceptance criteria and progress log.
 
 ## Path Requirements
 
@@ -274,6 +287,25 @@ If you caught yourself thinking:
 - executing-plans = EXECUTE plans only
 - These are separate skills. Never cross boundaries.
 
+### Violation 3: Reverting to generic file names
+
+**Stop. Use prefixed names derived from plan filename.**
+
+If you caught yourself thinking:
+- "Just use acceptance.json, it's simpler" → WRONG. Overwrites previous work.
+- "User can rename later" → WRONG. Files must be correctly named from creation.
+- "Prefixing is optional" → WRONG. Prefixing is required (prevents overwrites).
+- "Only prefix acceptance, not progress" → WRONG. All artifacts share prefix.
+
+| Excuse | Reality |
+|--------|---------|
+| "Generic names are simpler" | Generic names overwrite. Always prefix. |
+| "User didn't ask for prefixing" | Prefixing prevents data loss. Always use. |
+| "Template references target.txt" | Legacy pattern. Ignore - use prefixed names. |
+| "This plan won't have multiple" | Can't predict future. Always prefix. |
+
+**All of these mean: Use derived paths from plan filename. No exceptions.**
+
 ## Post-Write Workflow
 
 After writing the plan file, MUST complete these steps:
@@ -298,48 +330,27 @@ cp ~/.claude/plans/<plan-name>.md <working-directory>/llm/implementation-plans/<
 
 **Note:** The staging copy in `~/.claude/plans/` can remain (user may want it for reference), or be deleted with `rm ~/.claude/plans/<plan-name>.md` if preferred.
 
-### Step 0.5: Initialize Progress Log (if needed)
+### Step 0.5: Initialize Progress Log (Optional)
 
-**Check if progress.md exists:**
+**Check if user wants per-plan progress tracking:**
+
+Ask: "Would you like to initialize a progress log for this plan? (tracks cross-session state)"
+
+**If YES:**
+
 ```bash
-test -f <working-directory>/llm/progress.md && echo "EXISTS" || echo "MISSING"
+python3 ~/.claude/skills/writing-plans/scripts/initialize_progress.py \
+    --plan-file <working-directory>/llm/implementation-plans/<renamed-file>.md
 ```
 
-**If output is "MISSING"**, you MUST copy the template (do NOT create your own format):
+Output: `<renamed-file>-progress.md` (same directory as plan)
 
-```bash
-# Verify template exists first
-if [ ! -f ~/.claude/templates/progress.md ]; then
-  echo "ERROR: Template not found at ~/.claude/templates/progress.md"
-  echo "Contact your human partner - Task 1 must be completed first"
-  exit 1
-fi
+**If NO:** Skip this step.
 
-# Copy template AS-IS - do NOT create custom format
-cp ~/.claude/templates/progress.md <working-directory>/llm/progress.md
-echo "✓ Copied template to <working-directory>/llm/progress.md"
-```
-
-**IMPORTANT:** You must use `cp` command to copy the template. Do NOT:
-- Create your own custom progress.md format
-- Write a new file from scratch
-- "Improve" the template structure
-- Use Write tool to create progress.md
-
-The template has a specific structure for cross-session state. Use it exactly as-is.
-
-**After copying, fill in the template placeholders:**
-
-Use Read tool to view the template, then Edit tool to fill in:
-1. Replace plan path placeholder with actual path (you'll know this after rename step)
-2. Fill in `Branch:` with current git branch (`git branch --show-current`)
-3. Fill in `Last Commit:` with current commit SHA (`git rev-parse --short HEAD`)
-4. Replace `YYYY-MM-DD` with today's date
-5. Add initial session goal and task
-
-**If output is "EXISTS"**, skip this step entirely - progress.md already initialized.
-
-**Why this matters:** Consistent template structure ensures future Claude instances can parse cross-session state reliably.
+**Why optional:** Not all plans need progress tracking. Use for:
+- Multi-session feature work
+- Complex implementations
+- When resuming work across sessions
 
 ### Step 1: Validate Frontmatter
 
@@ -382,30 +393,29 @@ Expected output:
 
 **Check if user wants acceptance tracking:**
 
-Ask: "Would you like to generate acceptance.json for this plan? (enables regression testing and progress tracking)"
+Ask: "Would you like to generate acceptance criteria for this plan? (enables regression testing and progress tracking)"
 
 **If YES:**
 
-1. **Generate acceptance.json from plan structure:**
+1. **Generate acceptance.json (output path auto-derived):**
    ```bash
    python3 ~/.claude/skills/writing-plans/scripts/generate_acceptance.py \
-       --plan-file <working-directory>/llm/implementation-plans/<renamed-file>.md \
-       --output <working-directory>/llm/acceptance.json
+       --plan-file <working-directory>/llm/implementation-plans/<renamed-file>.md
    ```
+
+   Output: `<renamed-file>-acceptance.json` (same directory as plan)
 
 2. **Validate generated file:**
    ```bash
-   ~/.claude/templates/validate-acceptance.sh <working-directory>/llm/acceptance.json
+   ~/.claude/templates/validate-acceptance.sh \
+       <working-directory>/llm/implementation-plans/<renamed-file>-acceptance.json
    ```
 
    Expected output: `✓ Validation passed`
 
 **If NO:** Skip this step - acceptance.json can be added later if needed.
 
-**Why optional:** Not all plans need acceptance tracking. Use for:
-- Multi-session feature work
-- Complex implementations with many sub-tasks
-- When regression testing is critical
+**Note:** The `--output` parameter is now optional. If omitted, output path is derived from plan filename.
 
 ## Common Mistakes
 

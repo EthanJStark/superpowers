@@ -36,8 +36,23 @@ def extract_tasks(plan_content: str) -> list[dict]:
 
     return features
 
-def generate_acceptance(plan_file: Path, output_file: Path):
+def derive_acceptance_path(plan_file: Path) -> Path:
+    """
+    Derive acceptance.json path from plan filename.
+
+    Input:  llm/implementation-plans/251217-01-auth.md
+    Output: llm/implementation-plans/251217-01-auth-acceptance.json
+    """
+    stem = plan_file.stem  # "251217-01-auth"
+    parent = plan_file.parent  # "llm/implementation-plans"
+    return parent / f"{stem}-acceptance.json"
+
+def generate_acceptance(plan_file: Path, output_file: Path = None):
     """Generate acceptance.json from plan file."""
+    # If no output specified, derive from plan filename
+    if output_file is None:
+        output_file = derive_acceptance_path(plan_file)
+
     plan_content = plan_file.read_text()
     features = extract_tasks(plan_content)
 
@@ -71,7 +86,8 @@ def generate_acceptance(plan_file: Path, output_file: Path):
 def main():
     parser = argparse.ArgumentParser(description='Generate acceptance.json from plan')
     parser.add_argument('--plan-file', required=True, type=Path)
-    parser.add_argument('--output', required=True, type=Path)
+    parser.add_argument('--output', required=False, type=Path,
+                        help='Output path (default: derived from plan filename)')
     args = parser.parse_args()
 
     if not args.plan_file.exists():
