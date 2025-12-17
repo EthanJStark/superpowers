@@ -1,5 +1,11 @@
 #!/bin/bash
 # Install pre-commit hook for writing-plans enforcement
+#
+# Usage:
+#   ./install-hook.sh [repos_directory]
+#   REPOS_DIR=/path/to/repos ./install-hook.sh
+#
+# Default: ${HOME}/dev
 
 HOOK_CONTENT='#!/bin/bash
 # Pre-commit hook: Validate implementation plan format
@@ -22,7 +28,17 @@ fi
 '
 
 # Find all repos with llm/implementation-plans/ directory
-for repo in /Users/ethan.stark/dev/*/; do
+REPOS_DIR="${1:-${REPOS_DIR:-${HOME}/dev}}"
+
+if [ ! -d "$REPOS_DIR" ]; then
+  echo "⚠️  Repository directory not found: $REPOS_DIR"
+  echo "Specify REPOS_DIR environment variable or pass as argument"
+  exit 0
+fi
+
+echo "Searching for repositories in: $REPOS_DIR"
+
+for repo in "$REPOS_DIR"/*/; do
   if [ -d "$repo/llm/implementation-plans" ] && [ -d "$repo/.git" ]; then
     hook_path="$repo/.git/hooks/pre-commit"
 

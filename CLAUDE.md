@@ -55,7 +55,7 @@ This is a **Claude Code plugin** that provides a core skills library. Unlike tra
 
 When developing superpowers locally and testing changes in Claude Code:
 
-1. **Edit skills** in `/Users/ethan.stark/dev/claude-code-resources/superpowers/skills/`
+1. **Edit skills** in your local superpowers clone (e.g., `~/dev/superpowers/skills/`)
 2. **Commit changes** to your branch (e.g., `ethan-mod`)
 3. **Reload plugin** to reflect changes in Claude Code (paste both lines):
    ```bash
@@ -163,8 +163,8 @@ git add -A && git commit -m "your changes"
 **Creating a worktree for experiments:**
 
 ```bash
-# From main repository
-cd /Users/ethan.stark/dev/claude-code-resources/superpowers
+# From main repository (adjust path to your local clone)
+cd ~/dev/superpowers  # or wherever you cloned this repo
 
 # Create worktree with new branch
 git worktree add .worktrees/feature-name -b feature/my-experiment
@@ -180,8 +180,8 @@ cd .worktrees/feature-name
 **When satisfied with changes:**
 
 ```bash
-# Return to main
-cd /Users/ethan.stark/dev/claude-code-resources/superpowers
+# Return to main repository
+cd ~/dev/superpowers  # or wherever you cloned this repo
 
 # Merge feature branch
 git merge feature/my-experiment

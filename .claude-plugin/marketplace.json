@@ -9,11 +9,11 @@
     {
       "name": "superpowers-fork",
       "description": "Fork of superpowers with writing-plans skill and automation-over-documentation guidance. Original by Jesse Vincent.",
-      "version": "3.6.2",
+      "version": "3.7.1",
       "source": "./",
       "author": {
         "name": "Ethan Stark (original by Jesse Vincent)",
-        "email": "ethan.stark@renlearn.com"
+        "email": "19176630+EthanJStark@users.noreply.github.com"
       }
     }
   ]
