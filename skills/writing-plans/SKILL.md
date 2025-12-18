@@ -213,7 +213,7 @@ python3 <path-from-step-1> <working-dir> <file-path>
 ## Task Structure
 
 ```markdown
-### Task N: [Component Name]
+## Task N: [Component Name]
 
 **Files:**
 - Create: `exact/path/to/file.py`

@@ -1,5 +1,18 @@
 # Changelog - writing-plans Skill
 
+## 2025-12-18 - H2 Task Header Support
+
+### Fixed
+- **generate_acceptance.py**: Now supports both H2 (`## Task N:`) and H3 (`### Task N:`) task headers
+  - Previous: Only matched H3 format (`### Task N:`)
+  - Now: Matches both H2 and H3 formats via pattern `r'^#{2,3}\s+Task \d+:'`
+  - Backwards compatible with existing plans using H3 headers
+  - Fixes: Empty acceptance.json generation when plans use H2 headers (which is the standard format output by writing-plans skill)
+  - Updated warning message to reflect both supported formats
+
+### Changed
+- SKILL.md: Updated Task Structure example from `### Task N:` to `## Task N:` to match standard output format
+
 ## 2025-12-17 - Per-Plan File Naming
 
 ### Added

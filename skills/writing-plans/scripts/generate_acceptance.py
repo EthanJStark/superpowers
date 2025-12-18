@@ -13,7 +13,7 @@ from pathlib import Path
 def extract_tasks(plan_content: str) -> list[dict]:
     """Extract tasks from markdown plan."""
     features = []
-    task_pattern = r'^### Task \d+: (.+)$'
+    task_pattern = r'^#{2,3}\s+Task \d+: (.+)$'
 
     # Find all task headers
     for line in plan_content.split('\n'):
@@ -59,7 +59,7 @@ def generate_acceptance(plan_file: Path, output_file: Path = None):
     # Warn if no tasks were found
     if not features:
         print(f"WARNING: No tasks found in {plan_file.name}")
-        print("  Expected pattern: ### Task N: Description")
+        print("  Expected pattern: ## Task N: Description or ### Task N: Description")
         print("  Generating empty acceptance.json")
 
     # Resolve plan path relative to output file's parent (working directory)
