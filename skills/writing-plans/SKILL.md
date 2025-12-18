@@ -566,3 +566,25 @@ Next step: Use /superpowers-fork:execute-plan OR open new session with executing
 1. Lock file (primary - prevents unauthorized writes)
 2. Validation script (agent self-check)
 3. Git hook (catches violations at commit time)
+
+## Version History
+
+### v4.1.0 (2025-12-18)
+- **CRITICAL FIX:** Added mechanical enforcement for wrapper script invocation
+- Added Mechanical Enforcement section with explicit "MANDATORY" language
+- Enhanced Red Flags section with production incident examples (2025-12-18)
+- Added rationalization table mapping excuses to reality
+- Updated using-superpowers skill with writing-plans rationalizations
+- Created comprehensive test suite (baseline, enforcement, refactor, integration)
+- Created INCIDENT-REPORTS.md tracking production violations
+- Fixed: Agents skipping wrapper despite explicit instructions
+
+### v4.0.0 (2025-12-17)
+- Breaking: Namespace migration from `superpowers:` to `superpowers-fork:`
+- Updated all skill references for fork identity
+
+### v3.7.0 (2025-12-13)
+- Added lock file enforcement mechanism
+- Added git pre-commit hook for validation
+- Fixed path resolution issues in generate_acceptance.py
+- Enhanced testing verification section
