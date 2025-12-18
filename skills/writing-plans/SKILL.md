@@ -29,9 +29,21 @@ python3 <path-from-step-1> \
 
 **Note:** Command substitution `$(...)` doesn't work in Bash tool execution environment, so use two-step approach.
 
-**Mechanical enforcement:** Wrapper creates lock file enabling Write tool for implementation plans. Attempting to write without invoking wrapper will fail.
+## Mechanical Enforcement
 
-**Production incident:** 2025-12-13 - Agent skipped wrapper despite warnings. File never registered with file-track. Now mechanically enforced via lock file pattern.
+**This is NOT optional. This is NOT guidance. This is MANDATORY.**
+
+**Production incident (2025-12-18):** Agent received explicit instruction "Use the writing-plans skill exactly as written" but skipped wrapper script entirely.
+
+**Lock file enforcement:**
+1. Wrapper creates `.writing-plans-active` lock file
+2. Write tool can ONLY create plan if lock exists
+3. Attempting Write without lock will FAIL
+4. Lock is removed after rename script completes
+
+**You cannot write the plan without invoking wrapper first. The system prevents it.**
+
+**Previous incident (2025-12-13):** Agent skipped wrapper despite warnings. File never registered with file-track. Now mechanically enforced via lock file pattern.
 
 **DO NOT before invoking wrapper:**
 - Describe plan content in chat
@@ -265,10 +277,25 @@ If you caught yourself thinking:
 - "I can write without invoking wrapper" → WRONG. Wrapper ensures correct workflow.
 - "Plan is simple, skip wrapper" → WRONG. Wrapper prevents the bug this plan fixes.
 - "Create a plan" means output in chat → WRONG. "Create" means invoke wrapper.
+- "I remember how to write plans" → WRONG. Skills evolve. Always read current version.
+- "Wrapper is optional guidance" → WRONG. Wrapper is mandatory. Creates lock file.
+- "Too simple to need wrapper" → WRONG. Wrapper prevents the exact bug this incident shows.
+- "I'll write first, adapt later" → WRONG. Write without lock = violation. Wrapper first, always.
+- "Describing plan is helpful" → WRONG. Describing without writing = incomplete work. Invoke wrapper immediately.
 
-**Production incident:** 2025-12-13 - Agent described entire plan in chat instead of writing file. User had to explicitly correct: "You need to write that plan file."
+**Production incident (2025-12-18):** Agent received explicit instruction "Use the writing-plans skill exactly as written" via `/superpowers-fork:write-plan` command, but completely ignored the skill and wrote the plan directly without invoking the wrapper script.
+
+**Production incident (2025-12-13):** Agent described entire plan in chat instead of writing file. User had to explicitly correct: "You need to write that plan file."
 
 **All of these mean: Delete any plan content. Invoke wrapper script. Follow its directives exactly.**
+
+| Excuse | Reality |
+|--------|---------|
+| "I remember how to write plans" | Skills evolve. Always read current version. |
+| "Wrapper is optional guidance" | Wrapper is mandatory. Creates lock file. |
+| "Too simple to need wrapper" | Wrapper prevents the exact bug this incident shows. |
+| "I'll write first, adapt later" | Write without lock = violation. Wrapper first, always. |
+| "Describing plan is helpful" | Describing without writing = incomplete work. Invoke wrapper immediately. |
 
 ### Violation 2: Executing the plan after writing
 
