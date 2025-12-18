@@ -44,6 +44,8 @@ If you catch yourself thinking ANY of these thoughts, STOP. You are rationalizin
 - "The skill is overkill for this" → WRONG. Skills exist because simple things become complex. Use it.
 - "I'll just do this one thing first" → WRONG. Check for skills BEFORE doing anything.
 - "Just editing a skill file" → WRONG. Use writing-skills. Skills are code. Same TDD rules apply.
+- "I remember how to write plans" → WRONG. Read writing-plans skill.
+- "Let me describe the plan first" → WRONG. Invoke wrapper immediately.
 
 **Why:** Skills document proven techniques that save time and prevent mistakes. Not using available skills means repeating solved problems and making known errors.
 
