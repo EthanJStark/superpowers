@@ -1,0 +1,14 @@
+{
+  "name": "superpowers-dev",
+  "owner": {
+    "name": "Ethan Stark",
+    "email": "ethan.stark@renaissance.com"
+  },
+  "plugins": [
+    {
+      "name": "superpowers-fork",
+      "source": ".",
+      "description": "Production-tested fork with writing-plans automation"
+    }
+  ]
+}
