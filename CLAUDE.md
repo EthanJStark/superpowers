@@ -55,26 +55,26 @@ This is a **Claude Code plugin** that provides a core skills library. Unlike tra
 
 **First time setting up local development? Follow these steps:**
 
-1. **Add your local repo as a marketplace:**
+1. **Add the local marketplace wrapper:**
    ```bash
-   /plugin marketplace add /Users/ethan.stark/dev/claude-code-resources/superpowers
+   /plugin marketplace add /Users/ethan.stark/dev/claude-code-resources/superpowers-local-dev
    ```
 
-   This registers the repo as a marketplace named `superpowers` (from the directory name).
-   The repo contains `marketplace.json` at the root that defines it as a local marketplace.
+   This registers a marketplace wrapper that points to your working repo via relative path `../superpowers`.
+   The marketplace definition is at `superpowers-local-dev/.claude-plugin/marketplace.json`.
 
 2. **Verify marketplace added:**
    ```bash
    /plugin marketplace list
-   # Should show: superpowers (no errors)
+   # Should show: superpowers-local-dev (no errors)
    ```
 
 3. **Install the plugin from your local marketplace:**
    ```bash
-   /plugin install superpowers-fork@superpowers
+   /plugin install superpowers-fork@superpowers-local-dev
    ```
 
-**Important:** The marketplace.json at repo root is for local testing only and is NOT used when publishing to the company marketplace.
+**Why a wrapper directory?** The main repo's `.claude-plugin/marketplace.json` contains plugin publish metadata (for renaissance-marketplace), not marketplace definition. Claude Code requires marketplace definition at `.claude-plugin/marketplace.json`, so we use a separate wrapper directory to avoid conflicts.
 
 #### Quick Start (Daily Workflow)
 
@@ -84,8 +84,8 @@ When developing superpowers locally and testing changes in Claude Code:
 2. **Commit changes** to your branch (e.g., `integration/v4-consolidated`)
 3. **Reload plugin** to reflect changes in Claude Code (paste both lines):
    ```bash
-   /plugin uninstall superpowers-fork@superpowers
-   /plugin install superpowers-fork@superpowers
+   /plugin uninstall superpowers-fork@superpowers-local-dev
+   /plugin install superpowers-fork@superpowers-local-dev
    ```
 4. **Test changes** in a new Claude Code session
 
@@ -95,18 +95,18 @@ When developing superpowers locally and testing changes in Claude Code:
 
 **Your plugin identifiers:**
 - `superpowers-fork@renaissance-marketplace` - Company marketplace version (published)
-- `superpowers-fork@superpowers` - Local development version (this repo)
+- `superpowers-fork@superpowers-local-dev` - Local development version (wrapper pointing to this repo)
 
 **Switch TO local development:**
 ```bash
 /plugin uninstall superpowers-fork@renaissance-marketplace
-/plugin install superpowers-fork@superpowers
+/plugin install superpowers-fork@superpowers-local-dev
 # Then start new session
 ```
 
 **Switch BACK to marketplace:**
 ```bash
-/plugin uninstall superpowers-fork@superpowers
+/plugin uninstall superpowers-fork@superpowers-local-dev
 /plugin install superpowers-fork@renaissance-marketplace
 # Then start new session
 ```
@@ -117,15 +117,11 @@ When developing superpowers locally and testing changes in Claude Code:
 git add -A && git commit -m "your changes"
 
 # Reload plugin (paste both lines together):
-/plugin uninstall superpowers-fork@superpowers
-/plugin install superpowers-fork@superpowers
+/plugin uninstall superpowers-fork@superpowers-local-dev
+/plugin install superpowers-fork@superpowers-local-dev
 
 # Start new Claude Code session to see changes
 ```
-
-#### Legacy Local Development Setup (superpowers-local-dev)
-
-**Note:** The directory `/Users/ethan.stark/dev/claude-code-resources/superpowers-local-dev` is a legacy marketplace wrapper and is NO LONGER RECOMMENDED. Use the approach above instead (marketplace.json in repo root).
 
 #### When to Uninstall/Reinstall vs Restart
 
