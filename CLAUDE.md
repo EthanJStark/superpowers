@@ -301,8 +301,8 @@ Follow semantic versioning:
 
 **Skill References:**
 
-- Skills are namespace-qualified: `superpowers:skill-name`
-- Use slash commands to activate: `/superpowers:brainstorm`
+- Skills are namespace-qualified: `superpowers-fork:skill-name`
+- Use slash commands to activate: `/superpowers-fork:brainstorm`
 - Session hook auto-loads `using-superpowers` at startup
 
 **No Legacy Systems:**
