@@ -240,16 +240,21 @@ def main():
 
     # Remove lock file created by writing-plans wrapper
     # Find git root by walking up from the file
+    # IMPORTANT: Skip nested git repos (e.g., llm/.git) to find parent repo
     working_dir = new_path.parent
+    outermost_git_root = None
+
     while working_dir != working_dir.parent:
         if (working_dir / '.git').exists():
-            break
+            outermost_git_root = working_dir
         working_dir = working_dir.parent
 
-    lock_file = working_dir / '.writing-plans-active'
-    if lock_file.exists():
-        lock_file.unlink()
-        # Lock file removed silently
+    # Use outermost git root if found, otherwise use current directory
+    if outermost_git_root:
+        lock_file = outermost_git_root / '.writing-plans-active'
+        if lock_file.exists():
+            lock_file.unlink()
+            # Lock file removed silently
 
     sys.exit(0)
 

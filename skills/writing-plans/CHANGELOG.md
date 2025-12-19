@@ -1,5 +1,19 @@
 # Changelog - writing-plans Skill
 
+## 2025-12-18 - Lock File Cleanup Fix
+
+### Fixed
+- **rename_jot.py**: Lock file cleanup now correctly finds outermost git repository
+  - Previous: Stopped at first `.git` directory found (failed with nested repos like `llm/.git`)
+  - Now: Walks entire directory tree and uses outermost git root
+  - Fixes: `.writing-plans-active` lockfiles left unstaged when `llm/` is a nested git repo
+  - Added comprehensive tests for nested and single git repo scenarios
+
+### Added
+- `scripts/tests/test_rename_lockfile_cleanup.py`: Unit tests for lock cleanup logic
+- `scripts/tests/test_rename_integration.py`: Integration tests for full rename workflow
+- SKILL.md troubleshooting entry for nested git repo lock file issues
+
 ## 2025-12-18 - H2 Task Header Support
 
 ### Fixed

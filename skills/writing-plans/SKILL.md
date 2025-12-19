@@ -506,6 +506,14 @@ Ask: "Would you like to generate acceptance criteria for this plan? (enables reg
 2. Check `.writing-plans-active` exists in working directory
 3. If missing: must invoke wrapper before Write tool
 
+**Symptom:** Lock file left behind after rename script completes
+
+**Cause:** Nested git repositories (e.g., `llm/.git`) can confuse git root detection
+
+**Solution (v4.1.1+):** Fixed - rename script now finds outermost git repository, skipping nested repos
+
+**Workaround (older versions):** Manually remove: `rm .writing-plans-active` from main repo root
+
 ### Path Resolution Issues (generate_acceptance.py)
 
 **Symptom:** ValueError: 'path' is not in the subpath of 'cwd'
@@ -568,6 +576,12 @@ Next step: Use /superpowers-fork:execute-plan OR open new session with executing
 3. Git hook (catches violations at commit time)
 
 ## Version History
+
+### v4.1.1 (2025-12-18)
+- Fixed: Lock file cleanup failing with nested git repositories
+- rename_jot.py now finds outermost git root instead of stopping at first .git
+- Added troubleshooting entry for lock file cleanup with nested repos
+- Handles common pattern where llm/ is its own git repository
 
 ### v4.1.0 (2025-12-18)
 - **CRITICAL FIX:** Added mechanical enforcement for wrapper script invocation
