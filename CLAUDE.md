@@ -8,7 +8,7 @@ This is a **Claude Code plugin** that provides a core skills library. Unlike tra
 
 **Key Architecture:**
 
-- `skills/` - 21 skills organized by category (testing, debugging, collaboration, meta)
+- `skills/` - 14 skills organized by category (testing, debugging, collaboration, meta) - consolidated from 21 in v4.0.0
 - `commands/` - Slash commands that activate corresponding skills
 - `agents/` - Agent definitions (e.g., code-reviewer)
 - `hooks/` - Session lifecycle hooks (auto-loads skills system)
@@ -51,16 +51,49 @@ This is a **Claude Code plugin** that provides a core skills library. Unlike tra
 
 ### Local Plugin Development
 
-#### Quick Start
+#### Initial Setup (One-Time)
+
+**First time setting up local development? Follow these steps:**
+
+1. **Add the local marketplace wrapper:**
+   ```bash
+   # From parent directory (claude-code-resources/):
+   /plugin marketplace add ./superpowers-local-dev
+
+   # OR from main repo directory (superpowers/):
+   /plugin marketplace add ../superpowers-local-dev
+   ```
+
+   **Important:**
+   - The **command path** (what you type) should be **relative** starting with `./` or `../`
+   - The **source field** in `marketplace.json` should use an **absolute path** to avoid path traversal security errors
+
+   This registers a marketplace wrapper. The marketplace definition at `superpowers-local-dev/.claude-plugin/marketplace.json`
+   contains an absolute path to the plugin directory: `/Users/ethan.stark/dev/claude-code-resources/superpowers`.
+
+2. **Verify marketplace added:**
+   ```bash
+   /plugin marketplace list
+   # Should show: superpowers-local-dev (no errors)
+   ```
+
+3. **Install the plugin from your local marketplace:**
+   ```bash
+   /plugin install superpowers-fork@superpowers-local-dev
+   ```
+
+**Why a wrapper directory?** The main repo's `.claude-plugin/marketplace.json` contains plugin publish metadata (for renaissance-marketplace), not marketplace definition. Claude Code requires marketplace definition at `.claude-plugin/marketplace.json`, so we use a separate wrapper directory to avoid conflicts.
+
+#### Quick Start (Daily Workflow)
 
 When developing superpowers locally and testing changes in Claude Code:
 
-1. **Edit skills** in your local superpowers clone (e.g., `~/dev/superpowers/skills/`)
-2. **Commit changes** to your branch (e.g., `ethan-mod`)
+1. **Edit skills** in your local superpowers clone (e.g., `~/dev/claude-code-resources/superpowers/skills/`)
+2. **Commit changes** to your branch (e.g., `integration/v4-consolidated`)
 3. **Reload plugin** to reflect changes in Claude Code (paste both lines):
    ```bash
-   /plugin uninstall superpowers@superpowers-dev
-   /plugin install superpowers@superpowers-dev
+   /plugin uninstall superpowers-fork@superpowers-local-dev
+   /plugin install superpowers-fork@superpowers-local-dev
    ```
 4. **Test changes** in a new Claude Code session
 
@@ -69,19 +102,19 @@ When developing superpowers locally and testing changes in Claude Code:
 #### Switching Between Local and Marketplace Versions
 
 **Your plugin identifiers:**
-- `superpowers-fork@renaissance-marketplace` - Company marketplace version (published from this repo)
-- `superpowers@superpowers-dev` - Local development version
+- `superpowers-fork@renaissance-marketplace` - Company marketplace version (published)
+- `superpowers-fork@superpowers-local-dev` - Local development version (wrapper pointing to this repo)
 
 **Switch TO local development:**
 ```bash
 /plugin uninstall superpowers-fork@renaissance-marketplace
-/plugin install superpowers@superpowers-dev
+/plugin install superpowers-fork@superpowers-local-dev
 # Then start new session
 ```
 
 **Switch BACK to marketplace:**
 ```bash
-/plugin uninstall superpowers@superpowers-dev
+/plugin uninstall superpowers-fork@superpowers-local-dev
 /plugin install superpowers-fork@renaissance-marketplace
 # Then start new session
 ```
@@ -92,8 +125,8 @@ When developing superpowers locally and testing changes in Claude Code:
 git add -A && git commit -m "your changes"
 
 # Reload plugin (paste both lines together):
-/plugin uninstall superpowers@superpowers-dev
-/plugin install superpowers@superpowers-dev
+/plugin uninstall superpowers-fork@superpowers-local-dev
+/plugin install superpowers-fork@superpowers-local-dev
 
 # Start new Claude Code session to see changes
 ```
@@ -301,8 +334,8 @@ Follow semantic versioning:
 
 **Skill References:**
 
-- Skills are namespace-qualified: `superpowers:skill-name`
-- Use slash commands to activate: `/superpowers:brainstorm`
+- Skills are namespace-qualified: `superpowers-fork:skill-name`
+- Use slash commands to activate: `/superpowers-fork:brainstorm`
 - Session hook auto-loads `using-superpowers` at startup
 
 **No Legacy Systems:**

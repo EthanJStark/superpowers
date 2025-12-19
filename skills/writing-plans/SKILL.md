@@ -1,6 +1,6 @@
 ---
 name: writing-plans
-description: Use when design is complete and you need detailed implementation tasks - creates comprehensive plans with exact file paths, complete code examples, and verification steps. All artifacts (plan, acceptance, progress) share YYMMDD-XX prefix to prevent overwrites. CRITICAL - invokes wrapper script that forces file writing - "create a plan" means invoke wrapper and write file, NOT describe in chat. SCOPE - this skill ONLY writes plans, never executes them. Mechanically enforced via lock file (attempting bypass = error).
+description: Use when you have a spec or requirements for a multi-step task, before touching code. Creates comprehensive plans with exact file paths, complete code examples, and verification steps. CRITICAL - invokes wrapper script that forces file writing. Mechanically enforced via lock file.
 ---
 
 # Writing Plans
@@ -80,7 +80,7 @@ python3 <path-from-step-1> \
 }
 ```
 
-**Note:** After writing, the file will be renamed to `YYMMDDXX-<slug>.md` format by the rename script (where YYMMDD is year/month/day, XX is auto-sequenced). If written to staging area, it must be copied to the working directory's target directory before rename.
+**Note:** After writing, the file will be renamed to `YYMMDD-XX-<slug>.md` format by the rename script (where YYMMDD is year/month/day, XX is auto-sequenced). If written to staging area, it must be copied to the working directory's target directory before rename.
 
 ## Bite-Sized Task Granularity
 
@@ -134,7 +134,7 @@ python3 <path-from-step-1> \
 
 4. **Header section:** Goal, Architecture, Tech Stack (as shown above)
 
-**If a Jira ticket is referenced** (e.g., NPCP-1234), it will be included at the beginning of the final filename: `YYMMDDXX-NPCP-1234-<slug>.md`
+**If a Jira ticket is referenced** (e.g., NPCP-1234), it will be included at the beginning of the final filename: `YYMMDD-XX-NPCP-1234-<slug>.md`
 
 ## File Naming Convention
 
@@ -213,7 +213,7 @@ python3 <path-from-step-1> <working-dir> <file-path>
 ## Task Structure
 
 ```markdown
-## Task N: [Component Name]
+### Task N: [Component Name]
 
 **Files:**
 - Create: `exact/path/to/file.py`
@@ -254,6 +254,7 @@ git commit -m "feat: add specific feature"
 ```
 
 ## Remember
+
 - Exact file paths always
 - Complete code in plan (not "add validation")
 - Exact commands with expected output
@@ -535,15 +536,26 @@ Ask: "Would you like to generate acceptance criteria for this plan? (enables reg
 - ❌ **NOT** dispatch subagents to implement
 - ❌ **NOT** use executing-plans or subagent-driven-development
 
-**Report to user:**
+**Execution Handoff:**
 
-```
-Plan complete: llm/implementation-plans/<filename>.md
+After saving the plan, offer execution choice:
 
-Next step: Use /superpowers-fork:execute-plan OR open new session with executing-plans skill.
+**"Plan complete and saved to `<path>`. Two execution options:**
 
-[STOP - writing-plans skill scope ends here]
-```
+**1. Subagent-Driven (this session)** - I dispatch fresh subagent per task, review between tasks, fast iteration
+
+**2. Parallel Session (separate)** - Open new session with executing-plans, batch execution with checkpoints
+
+**Which approach?"**
+
+**If Subagent-Driven chosen:**
+- **REQUIRED SUB-SKILL:** Use superpowers-fork:subagent-driven-development
+- Stay in this session
+- Fresh subagent per task + code review
+
+**If Parallel Session chosen:**
+- Guide them to open new session in worktree
+- **REQUIRED SUB-SKILL:** New session uses superpowers-fork:executing-plans
 
 **Common Rationalization:**
 
@@ -576,6 +588,11 @@ Next step: Use /superpowers-fork:execute-plan OR open new session with executing
 3. Git hook (catches violations at commit time)
 
 ## Version History
+
+### v5.0.0 (2025-12-19)
+- Namespace migration: Updated all skill references from `superpowers:` to `superpowers-fork:`
+- Merged with upstream v4.0.0 improvements (cleaner structure, better execution handoff)
+- Preserved all fork enforcement mechanisms and documentation
 
 ### v4.1.1 (2025-12-18)
 - Fixed: Lock file cleanup failing with nested git repositories
