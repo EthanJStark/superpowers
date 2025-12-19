@@ -57,8 +57,14 @@ This is a **Claude Code plugin** that provides a core skills library. Unlike tra
 
 1. **Add the local marketplace wrapper:**
    ```bash
-   /plugin marketplace add /Users/ethan.stark/dev/claude-code-resources/superpowers-local-dev
+   # From parent directory (claude-code-resources/):
+   /plugin marketplace add ./superpowers-local-dev
+
+   # OR from main repo directory (superpowers/):
+   /plugin marketplace add ../superpowers-local-dev
    ```
+
+   **Important:** Claude Code requires **relative paths** starting with `./` or `../`. Absolute paths are not supported.
 
    This registers a marketplace wrapper that points to your working repo via relative path `../superpowers`.
    The marketplace definition is at `superpowers-local-dev/.claude-plugin/marketplace.json`.
