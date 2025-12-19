@@ -64,10 +64,12 @@ This is a **Claude Code plugin** that provides a core skills library. Unlike tra
    /plugin marketplace add ../superpowers-local-dev
    ```
 
-   **Important:** Claude Code requires **relative paths** starting with `./` or `../`. Absolute paths are not supported.
+   **Important:**
+   - The **command path** (what you type) should be **relative** starting with `./` or `../`
+   - The **source field** in `marketplace.json` should use an **absolute path** to avoid path traversal security errors
 
-   This registers a marketplace wrapper that points to your working repo via relative path `../superpowers`.
-   The marketplace definition is at `superpowers-local-dev/.claude-plugin/marketplace.json`.
+   This registers a marketplace wrapper. The marketplace definition at `superpowers-local-dev/.claude-plugin/marketplace.json`
+   contains an absolute path to the plugin directory: `/Users/ethan.stark/dev/claude-code-resources/superpowers`.
 
 2. **Verify marketplace added:**
    ```bash
