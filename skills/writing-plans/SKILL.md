@@ -1,6 +1,6 @@
 ---
 name: writing-plans
-description: Use when you have a spec or requirements for a multi-step task, before touching code. Creates comprehensive plans with exact file paths, complete code examples, and verification steps. CRITICAL - invokes wrapper script that forces file writing. Mechanically enforced via lock file.
+description: Use when design is complete, ready to implement, and need task breakdown with exact file paths - creates TDD-focused implementation plans with verification steps. Mechanically enforced via wrapper script (invokes wrapper and writes file, never describes in chat). Writes plans only, never executes them. Lock file enforcement prevents unauthorized writes.
 ---
 
 # Writing Plans
