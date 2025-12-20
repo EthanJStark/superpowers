@@ -41,6 +41,34 @@ python3 <path-from-step-1> \
 
 **Reality:** writing-plans writes, executing-plans executes. Never cross boundaries.
 
+## Quick Reference
+
+### Invoke Wrapper (FIRST ACTION)
+
+```bash
+# Step 1: Find script path
+find ~/.claude/plugins/cache -path "*/skills/writing-plans/scripts/write_plan.py" 2>/dev/null | head -1
+
+# Step 2: Invoke with path from step 1
+python3 <path-from-step-1> \
+  --working-dir <working-directory> \
+  --plan-name <descriptive-name>
+```
+
+### Post-Write Workflow
+
+| Step | Action | Script | Required |
+|------|--------|--------|----------|
+| 0 | Copy from staging (if plan mode) | `cp ~/.claude/plans/<name>.md <working-dir>/llm/...` | Conditional |
+| 1 | Validate frontmatter | `validate-frontmatter.py` | Yes |
+| 2 | Rename with sequence | `rename_jot.py` | Yes |
+| 3 | Generate acceptance | `generate_acceptance.py` | Optional |
+| 4 | Initialize progress | `initialize_progress.py` | Optional |
+
+### Then STOP
+
+writing-plans writes plans only. Never executes them.
+
 ## Mechanical Enforcement
 
 **This is NOT optional. This is NOT guidance. This is MANDATORY.**
@@ -600,6 +628,12 @@ After saving the plan, offer execution choice:
 3. Git hook (catches violations at commit time)
 
 ## Version History
+
+### v5.1.0 (2025-12-22)
+- Added "When NOT to Use" section for ws compliance
+- Optimized description for better CSO with implementation triggers
+- Added Quick Reference section for improved scannability
+- Enhanced keyword coverage: "ready to implement", "task breakdown", "TDD workflow"
 
 ### v5.0.0 (2025-12-19)
 - Namespace migration: Updated all skill references from `superpowers:` to `superpowers-fork:`
