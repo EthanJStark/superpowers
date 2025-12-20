@@ -29,6 +29,18 @@ python3 <path-from-step-1> \
 
 **Note:** Command substitution `$(...)` doesn't work in Bash tool execution environment, so use two-step approach.
 
+## When NOT to Use
+
+**Don't use writing-plans for:**
+- Executing existing plans → Use `superpowers-fork:executing-plans`
+- Quick prototypes/exploration → No plan needed, just implement
+- Project conventions → Use CLAUDE.md instead
+- One-off solutions → Implement directly
+
+**Common mistake:** "I see a plan file, I should execute it"
+
+**Reality:** writing-plans writes, executing-plans executes. Never cross boundaries.
+
 ## Mechanical Enforcement
 
 **This is NOT optional. This is NOT guidance. This is MANDATORY.**
