@@ -1,5 +1,21 @@
 # Changelog - writing-plans Skill
 
+## [5.1.0] - 2025-12-22
+
+### Added
+- "When NOT to Use" section addressing common scope violations
+- Quick Reference section consolidating repeated patterns
+- Enhanced CSO keywords in description: "ready to implement", "task breakdown", "TDD workflow"
+
+### Changed
+- Optimized description from 496 to ~356 characters
+- Improved focus on implementation triggers vs implementation details
+
+### Improved
+- Scannability via Quick Reference table format
+- Skill discovery via better keyword coverage
+- ws compliance with explicit anti-patterns section
+
 ## 2025-12-18 - Lock File Cleanup Fix
 
 ### Fixed
