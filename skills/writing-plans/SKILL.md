@@ -24,7 +24,8 @@ find ~/.claude/plugins/cache -path "*/skills/writing-plans/scripts/write_plan.py
 ```bash
 python3 <path-from-step-1> \
   --working-dir <working-directory> \
-  --plan-name <descriptive-name>
+  --plan-name <descriptive-name> \
+  --artifact-root <working-directory>/llm
 ```
 
 **Note:** Command substitution `$(...)` doesn't work in Bash tool execution environment, so use two-step approach.
@@ -52,7 +53,8 @@ find ~/.claude/plugins/cache -path "*/skills/writing-plans/scripts/write_plan.py
 # Step 2: Invoke with path from step 1
 python3 <path-from-step-1> \
   --working-dir <working-directory> \
-  --plan-name <descriptive-name>
+  --plan-name <descriptive-name> \
+  --artifact-root <working-directory>/llm
 ```
 
 ### Post-Write Workflow
@@ -223,7 +225,8 @@ find ~/.claude/plugins/cache -path "*/skills/writing-plans/scripts/write_plan.py
 python3 <path-from-step-1> \
     --working-dir /path/to/repo \
     --plan-name my-feature \
-    --target-dir docs/architecture
+    --target-dir docs/architecture \
+    --artifact-root /path/to/repo/llm
 ```
 
 This flexibility allows the writing-plans skill to work with different project organizational conventions while maintaining backward compatibility with existing "llm/" workflows.
