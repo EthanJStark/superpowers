@@ -78,10 +78,10 @@ writing-plans writes plans only. Never executes them.
 **Production incident (2025-12-18):** Agent received explicit instruction "Use the writing-plans skill exactly as written" but skipped wrapper script entirely.
 
 **Lock file enforcement:**
-1. Wrapper creates `.writing-plans-active` lock file
+1. Wrapper creates `.writing-plans-active` lock file in artifact_root (llm/)
 2. Write tool can ONLY create plan if lock exists
 3. Attempting Write without lock will FAIL
-4. Lock is removed after rename script completes
+4. Lock is removed from artifact_root after rename script completes
 
 **You cannot write the plan without invoking wrapper first. The system prevents it.**
 
@@ -234,10 +234,12 @@ This flexibility allows the writing-plans skill to work with different project o
 ## Enforcement Mechanism
 
 **Lock file pattern:**
-1. Wrapper creates `.writing-plans-active` in working directory
+1. Wrapper creates `.writing-plans-active` in artifact_root (e.g., llm/)
 2. Lock file contains authorized file path
 3. Write tool can only create plan if lock exists (future: full integration)
-4. Rename script removes lock after complete workflow
+4. Rename script removes lock from artifact_root after complete workflow
+
+**Location:** Lock files are created in artifact_root directory to avoid cluttering repo root and to keep them hidden from git status (llm/ is typically in .gitignore).
 
 **Current enforcement layers:**
 - Lock file created by wrapper (implemented)
@@ -547,7 +549,7 @@ Ask: "Would you like to generate acceptance criteria for this plan? (enables reg
 
 **Solution:**
 1. Verify wrapper script was invoked first (creates lock file)
-2. Check `.writing-plans-active` exists in working directory
+2. Check `.writing-plans-active` exists in artifact_root (e.g., llm/)
 3. If missing: must invoke wrapper before Write tool
 
 **Symptom:** Lock file left behind after rename script completes
@@ -557,6 +559,15 @@ Ask: "Would you like to generate acceptance criteria for this plan? (enables reg
 **Solution (v4.1.1+):** Fixed - rename script now finds outermost git repository, skipping nested repos
 
 **Workaround (older versions):** Manually remove: `rm .writing-plans-active` from main repo root
+
+**Symptom:** Lock file found in repo root instead of llm/
+
+**Cause:** Old version of script or missing --artifact-root parameter
+
+**Solution:**
+1. Upgrade to latest plugin version (v5.0.2+)
+2. Manually remove old lock: `rm .writing-plans-active`
+3. Re-run wrapper with --artifact-root parameter (auto-included in v5.0.2+)
 
 ### Path Resolution Issues (generate_acceptance.py)
 
