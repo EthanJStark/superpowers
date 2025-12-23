@@ -239,22 +239,35 @@ def main():
     # Don't fail the rename operation if tracking fails
 
     # Remove lock file created by writing-plans wrapper
-    # Find git root by walking up from the file
-    # IMPORTANT: Skip nested git repos (e.g., llm/.git) to find parent repo
-    working_dir = new_path.parent
-    outermost_git_root = None
+    # Strategy: Check artifact_root first (where plan is located), then fall back to git root
+    #
+    # 1. Check if lock file exists in the same directory as the plan
+    #    (for plans in llm/implementation-plans, this checks llm/)
+    plan_parent = new_path.parent
+    artifact_root = plan_parent.parent if plan_parent.name in ['implementation-plans', 'designs'] else plan_parent
+    lock_file = artifact_root / '.writing-plans-active'
 
-    while working_dir != working_dir.parent:
-        if (working_dir / '.git').exists():
-            outermost_git_root = working_dir
-        working_dir = working_dir.parent
+    if lock_file.exists():
+        lock_file.unlink()
+        # Lock file removed silently from artifact_root
+    else:
+        # 2. Fallback to git root for backward compatibility with older versions
+        # Find git root by walking up from the file
+        # IMPORTANT: Skip nested git repos (e.g., llm/.git) to find parent repo
+        working_dir = new_path.parent
+        outermost_git_root = None
 
-    # Use outermost git root if found, otherwise use current directory
-    if outermost_git_root:
-        lock_file = outermost_git_root / '.writing-plans-active'
-        if lock_file.exists():
-            lock_file.unlink()
-            # Lock file removed silently
+        while working_dir != working_dir.parent:
+            if (working_dir / '.git').exists():
+                outermost_git_root = working_dir
+            working_dir = working_dir.parent
+
+        # Use outermost git root if found
+        if outermost_git_root:
+            lock_file = outermost_git_root / '.writing-plans-active'
+            if lock_file.exists():
+                lock_file.unlink()
+                # Lock file removed silently from git root
 
     sys.exit(0)
 
