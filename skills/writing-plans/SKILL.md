@@ -643,6 +643,13 @@ After saving the plan, offer execution choice:
 
 ## Version History
 
+### v5.1.1 (2025-12-23)
+- Fixed: Lock files (.writing-plans-active) now created in artifact_root (llm/) instead of repo root
+- Fixed: Lock files properly cleaned up from artifact_root after workflow completes
+- Added: --artifact-root parameter to write_plan.py for configurable lock location
+- Updated: rename_jot.py searches artifact_root first for lock file cleanup
+- Improved: Lock files no longer clutter git status (hidden in llm/ which is typically in .gitignore)
+
 ### v5.1.0 (2025-12-22)
 - Added "When NOT to Use" section for ws compliance
 - Optimized description for better CSO with implementation triggers
