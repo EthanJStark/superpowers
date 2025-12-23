@@ -49,6 +49,11 @@ def main():
         default=get_plans_dir(),
         help="Target directory relative to working-dir (default: from config or llm/implementation-plans)"
     )
+    parser.add_argument(
+        "--artifact-root",
+        default=None,
+        help="Artifact root directory for lock files (default: working-dir)"
+    )
 
     args = parser.parse_args()
 
@@ -67,7 +72,9 @@ def main():
         print(f"✓ Write plan to: {target_file}")
 
     # Create lock file to enable Write tool for this plan
-    lock_file = os.path.join(args.working_dir, '.writing-plans-active')
+    # Use artifact_root if provided, fallback to working_dir
+    lock_dir = args.artifact_root if args.artifact_root else args.working_dir
+    lock_file = os.path.join(lock_dir, '.writing-plans-active')
     with open(lock_file, 'w') as f:
         f.write(f"{target_file}\n")
         f.write(f"created: {datetime.now().isoformat()}\n")
