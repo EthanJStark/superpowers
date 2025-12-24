@@ -279,6 +279,79 @@ After multiple plugin updates, you may see:
 - **Cause:** Didn't reload plugin or start new session
 - **Fix:** Uninstall → Reinstall → New session
 
+#### Stale Plugin Cache Detection
+
+**Symptoms:**
+- Script not found errors despite plugin being installed
+- Script exists but doesn't have expected feature/fix
+- Different behavior between sessions
+
+**Diagnostic procedure:**
+
+```bash
+# 1. Check all cached versions
+find ~/.claude/plugins/cache -type d -name "superpowers-fork"
+
+# 2. Check which version has the script/feature you need
+find ~/.claude/plugins/cache -path "*/scripts/your-script.py" -exec ls -lh {} \;
+
+# 3. Verify CLAUDE_PLUGIN_ROOT points to expected version
+echo $CLAUDE_PLUGIN_ROOT
+# Compare with versions from step 1
+
+# 4. Check which version has recent changes
+find ~/.claude/plugins/cache -type d -name "superpowers-fork" -exec stat -f "%Sm %N" -t "%Y-%m-%d %H:%M:%S" {} \;
+```
+
+**Resolution:**
+
+If `${CLAUDE_PLUGIN_ROOT}` points to stale version:
+1. Uninstall plugin: `/plugin uninstall superpowers-fork@superpowers-local-dev`
+2. Reinstall plugin: `/plugin install superpowers-fork@superpowers-local-dev`
+3. Start new session (existing session still bound to old cache)
+4. Verify: `echo $CLAUDE_PLUGIN_ROOT` should show new directory
+
+**Prevention:**
+
+- Always use `${CLAUDE_PLUGIN_ROOT}/path/to/script` instead of `find ... | head -1`
+- Follow uninstall → reinstall → restart cycle for all updates
+- Paste both uninstall and install commands together to prevent partial updates
+
+#### Cache Version Mismatch Detection
+
+**Quick check for multiple versions:**
+
+```bash
+find ~/.claude/plugins/cache -type d -name "superpowers-fork" | wc -l
+```
+
+Expected: 1 (single version)
+Concerning: 2+ (multiple versions - potential for confusion)
+
+**If multiple versions found:**
+
+```bash
+# Check timestamps to identify latest
+find ~/.claude/plugins/cache -type d -name "superpowers-fork" -exec ls -ld {} \;
+
+# Check plugin.json versions
+find ~/.claude/plugins/cache -path "*superpowers-fork*/.claude-plugin/plugin.json" -exec jq -r '.version' {} \; 2>/dev/null
+
+# Compare with settings.json to see which is "installed"
+grep -A 5 "superpowers-fork" ~/.claude/settings.json
+```
+
+**Clean up old versions (optional):**
+
+Old cache directories can be manually removed if no sessions are using them:
+
+```bash
+# DANGER: Only do this with Claude Code fully quit
+rm -rf ~/.claude/plugins/cache/temp_local_OLD_TIMESTAMP/
+```
+
+**Safer approach:** Uninstall → reinstall clears cache automatically.
+
 ### PR Creation Safety
 
 **Approval pattern:** finishing-a-development-branch skill enforces preview-then-confirm for PR creation.
