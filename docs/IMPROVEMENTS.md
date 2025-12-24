@@ -48,6 +48,20 @@ Strengthens skill modification governance with enhanced discoverability and rati
 - **Rationalization counters** against "just adding a section" shortcuts
 - **Clear guidance on TDD treatment vs. quick updates** - when skills need full testing methodology
 
+### 6. Plugin Cache Documentation and Anti-Patterns
+
+Comprehensive documentation of plugin cache behavior and elimination of vulnerable path resolution patterns.
+
+- **Anti-pattern warnings** for `find ... | head -1` (non-deterministic when multiple cache versions exist)
+- **${CLAUDE_PLUGIN_ROOT} documentation** - session-bound environment variable for safe script paths
+- **Session binding mechanics** - explains why restart is required after updates
+- **Cache diagnostics** - troubleshooting procedures for stale cache detection
+- **Implementation plan cleanup** - replaced all vulnerable patterns with safe alternatives
+
+**Problem solved:** Multi-source documentation failure where implementation plans taught non-deterministic patterns that could select stale plugin cache when multiple versions existed. Research identified that no documentation source explained session binding, cache version conflicts, or diagnostic procedures.
+
+**Impact:** Prevents future stale cache bugs by teaching correct patterns and providing troubleshooting tools.
+
 ## Philosophy
 
 **Automation over documentation** for objective constraints, while preserving judgment-based guidance for subjective decisions. Skills are TDD for documentation—we test first, then write documentation that makes tests pass, iterating to close loopholes where agents rationalize around requirements.
