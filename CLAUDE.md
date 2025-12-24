@@ -231,17 +231,31 @@ cat ${CLAUDE_PLUGIN_ROOT}/skills/skill-name/reference.md
 
 Slash commands (e.g., `/superpowers-fork:brainstorm`) automatically have `${CLAUDE_PLUGIN_ROOT}` available when they spawn subagents or run scripts.
 
-**Verification:**
+**Availability:**
+
+`${CLAUDE_PLUGIN_ROOT}` is ONLY available within skill execution contexts:
+- ✅ Inside skill scripts being executed
+- ✅ In session lifecycle hooks
+- ✅ In subagents spawned by skills
+- ❌ NOT in arbitrary Bash tool calls during conversation
+
+**Verification (within skill contexts):**
 
 ```bash
-# Check variable is set
+# Inside a skill script or subagent:
 echo $CLAUDE_PLUGIN_ROOT
-
-# Check it points to superpowers plugin
 ls ${CLAUDE_PLUGIN_ROOT}/skills/
 ```
 
 Expected: Should list all skills directories
+
+**Debugging outside skill contexts:**
+
+```bash
+# Check plugin installed and location
+cat ~/.claude/settings.json | jq '.enabledPlugins'
+find ~/.claude/plugins/cache -type d -name "superpowers-fork"
+```
 
 ### Understanding Plugin Cache
 
