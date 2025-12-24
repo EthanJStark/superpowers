@@ -641,7 +641,7 @@ After saving the plan, offer execution choice:
 ## Testing Verification
 
 **Date:** 2025-12-13
-**Approach:** Mechanical enforcement (automation-over-documentation.md)
+**Approach:** Mechanical enforcement (automate objective constraints)
 **Method:** Lock file pattern + git pre-commit hook
 
 **Test results:**
@@ -652,7 +652,7 @@ After saving the plan, offer execution choice:
 
 **Evidence for automation approach:**
 - Previous violation (2025-12-13) despite strong documentation warnings
-- automation-over-documentation.md: "Mechanical constraints belong in code"
+- Principle: Mechanical constraints belong in code, not documentation
 - Cost-benefit: 30 min implementation vs 2-3 hours iterating documentation
 
 **Enforcement layers:**
