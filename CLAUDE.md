@@ -135,19 +135,32 @@ git add -A && git commit -m "your changes"
 
 **How plugin caching works:**
 - Plugin code is cached when installed - changes to source files don't automatically reflect
-- Skills are loaded at session start - they need a new session to load
+- **Session binding:** Each session locks to specific cache directory on startup
+- Skills are loaded at session start - they need a new session to reload
 - Uninstall/reinstall forces cache refresh and reloads components
-- Restart alone is NOT sufficient - you need uninstall/reinstall
+- **Restart alone is NOT sufficient** - must have new cache to bind to
+
+**⚠️ CRITICAL: Restart is ALWAYS required after plugin changes**
+
+"Restart alone is NOT sufficient - you need uninstall/reinstall"
+
+**Why:** Claude Code sessions bind to plugin cache on startup. Even after cache updates:
+- Running sessions remain bound to old cache
+- New files/changes won't appear until restart
+- `${CLAUDE_PLUGIN_ROOT}` continues pointing to old location
+
+**Workflow:** Uninstall → Reinstall → Restart → Verify
 
 **Decision matrix:**
 
-| Scenario | Action |
-|----------|--------|
-| Changed skill content in source directory | Uninstall → Reinstall → New session |
-| Changed command markdown | Uninstall → Reinstall → New session |
-| Need to test same skill twice | Start new session (no reinstall needed) |
-| Switching between marketplace and local | Uninstall old → Install new → New session |
-| Plugin not appearing in `/help` | Uninstall → Reinstall → New session |
+| Scenario | Action | Why |
+|----------|--------|-----|
+| Changed skill content in source directory | Uninstall → Reinstall → Restart mandatory | Source changes don't affect cache; must propagate to cache and rebind session |
+| Plugin update from marketplace | Uninstall → Reinstall → Restart mandatory | New cache created; must bind new session to it |
+| Testing same skill twice | Restart (new session) | Rebind to ensure clean state |
+| Switching between marketplace and local | Uninstall old → Install new → Restart mandatory | Different plugin identities require cache invalidation |
+| Plugin not appearing in `/help` | Uninstall → Reinstall → Restart mandatory | Metadata not loaded; must clear and rebind |
+| Script path not found error | Check ${CLAUDE_PLUGIN_ROOT}, then Uninstall → Reinstall → Restart | May be bound to stale cache |
 
 **Always paste both commands together:**
 ```bash
