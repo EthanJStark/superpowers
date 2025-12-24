@@ -2,15 +2,10 @@
   "name": "superpowers-fork",
   "description": "Production-tested fork with writing-plans automation",
   "version": "5.1.1",
-  "authors": [
-    {
-      "name": "Jesse Vincent",
-      "email": "jesse@fsck.com"
-    },
-    {
-      "name": "Ethan Stark"
-    }
-  ],
+  "author": {
+    "name": "Jesse Vincent & Ethan Stark",
+    "email": "jesse@fsck.com"
+  },
   "homepage": "https://github.com/obra/superpowers",
   "repository": "https://github.com/obra/superpowers",
   "license": "MIT",

@@ -1,3 +1,11 @@
 .worktrees/
 .private-journal/
 .claude/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Writing-plans lock file
+.writing-plans-active
