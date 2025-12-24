@@ -187,6 +187,49 @@ python3 <path-from-step-1> --args
 
 **See also:** `llm/pattern-replacement-guide.md` for complete examples.
 
+### Using ${CLAUDE_PLUGIN_ROOT}
+
+**Environment variable set by Claude Code:** Points to the active plugin's cache directory for the current session.
+
+**Value example:**
+```bash
+~/.claude/plugins/cache/temp_local_1234567890/
+```
+
+**Why it's important:**
+- Session-bound: Always references the plugin version loaded when session started
+- Portable: Works across different installations and users
+- Safe: Immune to cache version conflicts
+
+**Usage in skills:**
+
+```bash
+# Invoke Python script
+python3 ${CLAUDE_PLUGIN_ROOT}/skills/writing-plans/scripts/write_plan.py --args
+
+# Source bash functions
+source ${CLAUDE_PLUGIN_ROOT}/skills/skill-name/helpers.sh
+
+# Reference documentation
+cat ${CLAUDE_PLUGIN_ROOT}/skills/skill-name/reference.md
+```
+
+**Usage in commands:**
+
+Slash commands (e.g., `/superpowers-fork:brainstorm`) automatically have `${CLAUDE_PLUGIN_ROOT}` available when they spawn subagents or run scripts.
+
+**Verification:**
+
+```bash
+# Check variable is set
+echo $CLAUDE_PLUGIN_ROOT
+
+# Check it points to superpowers plugin
+ls ${CLAUDE_PLUGIN_ROOT}/skills/
+```
+
+Expected: Should list all skills directories
+
 #### Troubleshooting
 
 **Issue:** Plugin error in `/doctor` output
