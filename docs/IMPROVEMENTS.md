@@ -16,15 +16,7 @@ Enhances the existing `writing-plans` skill with executable wrapper scripts that
 - **Git pre-commit hooks** prevent commits without corresponding implementation plans
 - **Shifts from documentation to mechanical constraints** - addresses incidents where agents rationalized away requirements
 
-### 2. Automation Over Documentation Framework
-
-A new guidance document establishing when to use code vs. documentation for skill requirements.
-
-- **Clear decision criteria**: objective, programmatically detectable requirements should trigger automation
-- **Reduces documentation churn** - when violations are 100% detectable, use automation
-- **Framework for future skill development** - establishes pattern for similar enforcement needs
-
-### 3. PR Creation Safety Gate
+### 2. PR Creation Safety Gate
 
 Adds mandatory user preview and approval before pull request creation in the `finishing-a-development-branch` skill.
 
@@ -32,7 +24,7 @@ Adds mandatory user preview and approval before pull request creation in the `fi
 - **Preview-then-confirm pattern** prevents bypassing approval workflows through rationalization
 - **Follows pattern from `jira-publisher` skill** - proven safety-critical workflow
 
-### 4. Continuous Execution Pattern
+### 3. Continuous Execution Pattern
 
 Removes artificial 3-task batching checkpoints from `executing-plans`, allowing uninterrupted workflow through multiple tasks.
 
@@ -40,7 +32,7 @@ Removes artificial 3-task batching checkpoints from `executing-plans`, allowing 
 - **Only genuine blockers cause pauses** - maintains quality gates
 - **Preserves all safety checks** - verification still runs at appropriate times
 
-### 5. Writing-Skills Governance
+### 4. Writing-Skills Governance
 
 Strengthens skill modification governance with enhanced discoverability and rationalization counters.
 
@@ -48,7 +40,7 @@ Strengthens skill modification governance with enhanced discoverability and rati
 - **Rationalization counters** against "just adding a section" shortcuts
 - **Clear guidance on TDD treatment vs. quick updates** - when skills need full testing methodology
 
-### 6. Plugin Cache Documentation and Anti-Patterns
+### 5. Plugin Cache Documentation and Anti-Patterns
 
 Comprehensive documentation of plugin cache behavior and elimination of vulnerable path resolution patterns.
 
@@ -64,7 +56,9 @@ Comprehensive documentation of plugin cache behavior and elimination of vulnerab
 
 ## Philosophy
 
-**Automation over documentation** for objective constraints, while preserving judgment-based guidance for subjective decisions. Skills are TDD for documentation—we test first, then write documentation that makes tests pass, iterating to close loopholes where agents rationalize around requirements.
+**Mechanical constraints belong in code, not documentation.** When requirements are 100% objective and programmatically detectable (format, structure, regex-enforceable rules), automate them. Save documentation for judgment calls where human-like reasoning matters.
+
+**Skills are TDD for documentation**—we test first, then write documentation that makes tests pass, iterating to close loopholes where agents rationalize around requirements.
 
 ---
 
