@@ -155,6 +155,38 @@ git add -A && git commit -m "your changes"
 /plugin install superpowers@superpowers-dev
 ```
 
+### Path Resolution Anti-Patterns
+
+**❌ NEVER use `find ... | head -1` to locate plugin scripts:**
+
+```bash
+# DON'T: Non-deterministic when multiple cache versions exist
+find ~/.claude/plugins/cache -path "*/scripts/*.py" 2>/dev/null | head -1
+```
+
+**Problem:** When multiple plugin cache versions exist (e.g., after updates), `find | head -1` can select a stale version instead of the active session's version.
+
+**✅ ALWAYS use `${CLAUDE_PLUGIN_ROOT}` for script paths:**
+
+```bash
+# DO: Deterministic - uses active session's plugin version
+${CLAUDE_PLUGIN_ROOT}/skills/skill-name/scripts/script-name.py
+```
+
+**✅ Alternative: Two-step manual pattern (safe):**
+
+```bash
+# Step 1: User locates and copies path
+find ~/.claude/plugins/cache -path "*/skills/skill-name/scripts/script.py" 2>/dev/null | head -1
+
+# Step 2: User pastes path from step 1
+python3 <path-from-step-1> --args
+```
+
+**Why two-step is safe:** User manually verifies and copies the correct path between steps, preventing automated selection of wrong version.
+
+**See also:** `llm/pattern-replacement-guide.md` for complete examples.
+
 #### Troubleshooting
 
 **Issue:** Plugin error in `/doctor` output
