@@ -230,6 +230,41 @@ ls ${CLAUDE_PLUGIN_ROOT}/skills/
 
 Expected: Should list all skills directories
 
+### Understanding Plugin Cache
+
+**How plugin caching works:**
+
+1. **Installation:** Plugin files copied from source to `~/.claude/plugins/cache/<directory>/`
+2. **Session start:** Claude Code binds to specific cache directory, sets `${CLAUDE_PLUGIN_ROOT}`
+3. **Session lifetime:** Same cache version used throughout session (no dynamic reload)
+4. **Updates:** New version creates new cache directory (e.g., `temp_local_1234567891/`)
+
+**Multi-version cache directories:**
+
+After multiple plugin updates, you may see:
+```bash
+~/.claude/plugins/cache/
+  temp_local_1766188090207/  # Old version (may still be in use by running session)
+  temp_local_1766199234567/  # Newer version
+  temp_local_1766201234567/  # Latest version
+```
+
+**Session binding (critical concept):**
+- Each Claude Code session binds to ONE cache directory on startup
+- Running sessions continue using their bound cache even after plugin updates
+- New sessions use the latest cache directory
+- **This is why restart is required after updates**
+
+**Cache invalidation:**
+- ✅ Happens on: Uninstall → Reinstall (removes old cache, creates new)
+- ✅ Happens on: Plugin update (creates new cache directory)
+- ❌ Doesn't happen on: Session restart without reinstall
+- ❌ Doesn't happen on: File edits in source directory
+
+**Common misconception:** "I edited the plugin source, so changes should appear"
+
+**Reality:** Changes in source directory don't affect cache. Must uninstall → reinstall to propagate changes to cache, then restart to bind new session to updated cache.
+
 #### Troubleshooting
 
 **Issue:** Plugin error in `/doctor` output
