@@ -46,6 +46,16 @@ python3 <path-from-step-1> \
 
 ### Invoke Wrapper (FIRST ACTION)
 
+**❌ DANGEROUS: Do NOT use non-deterministic find pattern**
+
+```bash
+# DON'T: Can select stale cache when multiple versions exist
+SCRIPT=$(find ~/.claude/plugins/cache -path "*/scripts/write_plan.py" 2>/dev/null | head -1)
+python3 $SCRIPT --args
+```
+
+**✅ SAFE: Two-step manual approach**
+
 ```bash
 # Step 1: Find script path
 find ~/.claude/plugins/cache -path "*/skills/writing-plans/scripts/write_plan.py" 2>/dev/null | head -1
@@ -56,6 +66,12 @@ python3 <path-from-step-1> \
   --plan-name <descriptive-name> \
   --artifact-root <working-directory>/llm
 ```
+
+**Note:** Command substitution `$(...)` doesn't work in Bash tool execution environment, so use two-step approach.
+
+**Why two-step is safe:** User manually copies correct path between steps, verifying the selected version before execution.
+
+**Best practice (if available):** Use `${CLAUDE_PLUGIN_ROOT}/skills/writing-plans/scripts/write_plan.py` when environment variable is available.
 
 ### Post-Write Workflow
 
@@ -529,13 +545,16 @@ Ask: "Would you like to generate acceptance criteria for this plan? (enables reg
 
 **Symptom:** Error like "can't open file '/skills/writing-plans/scripts/write_plan.py'"
 
-**Cause:** Script path variable is empty or malformed
+**Cause:** Script path variable is empty or malformed, OR selected stale cache version
 
 **Solution:**
 1. Verify script exists: `find ~/.claude/plugins/cache -path "*/skills/writing-plans/scripts/write_plan.py"`
 2. Check output - should show one absolute path
-3. If no path found: plugin not installed correctly - reinstall from marketplace
-4. If path found: use that literal path in python3 command
+3. **If multiple paths found:** You have multiple cache versions - use `${CLAUDE_PLUGIN_ROOT}` or manually select latest
+4. If no path found: plugin not installed correctly - reinstall from marketplace
+5. If path found but wrong version: Check `${CLAUDE_PLUGIN_ROOT}`, may need to restart session
+
+**Prevention:** Use `${CLAUDE_PLUGIN_ROOT}/skills/writing-plans/scripts/write_plan.py` instead of `find` when available.
 
 **Symptom:** Parse error with parentheses: `parse error near '('`
 
