@@ -143,10 +143,54 @@ Skills live directly in this repository. To contribute:
 
 See `skills/writing-skills/SKILL.md` for the complete guide.
 
-### Release Tools
+### Release Workflow
 
-Version management uses Commitizen:
+Version management uses Commitizen with conventional commits:
 
+**Commit format:**
+- `feat:` - New features (minor version bump)
+- `fix:` - Bug fixes (patch version bump)
+- `docs:` - Documentation only
+- `chore:` - Maintenance tasks
+- `BREAKING CHANGE:` in commit body - Major version bump
+
+**Release process:**
+
+1. Make conventional commits as you work:
+   ```bash
+   git commit -m "feat: add new skill"
+   git commit -m "fix: correct script path"
+   ```
+
+2. When ready to release:
+   ```bash
+   ./scripts/release.sh
+   ```
+
+3. Script will:
+   - Check for clean git state
+   - Analyze commits since last tag
+   - Preview version bump (major/minor/patch)
+   - Update `.claude-plugin/plugin.json`
+   - Generate `CHANGELOG.md`
+   - Create annotated git tag
+   - Show push instructions
+
+4. Push to GitHub:
+   ```bash
+   git push --follow-tags
+   ```
+
+5. Marketplace updates automatically:
+   - Company marketplace reads `plugin.json` from GitHub
+   - No manual marketplace sync needed
+   - Users install: `superpowers-fork@renaissance-marketplace`
+
+**Tools:**
+- Commitizen: Version bumping and changelog generation
+- Pre-commit: Conventional commit validation
+
+**Installation:**
 ```bash
 pipx install commitizen pre-commit
 ```

@@ -517,21 +517,37 @@ See `skills/testing-skills-with-subagents/SKILL.md` for complete methodology.
 
 ## Version Management
 
-Update plugin version in `.claude-plugin/plugin.json`:
+**Automated with Commitizen:**
 
-```json
-{
-  "name": "superpowers",
-  "version": "X.Y.Z",
-  ...
-}
+```bash
+# Install tools (one-time)
+pipx install commitizen pre-commit
+pre-commit install --hook-type commit-msg
+
+# Make conventional commits
+git commit -m "feat: add new feature"
+git commit -m "fix: correct bug"
+
+# Release
+./scripts/release.sh  # Auto-determines version, updates files, creates tag
+git push --follow-tags
 ```
 
-Follow semantic versioning:
+**Version determination:**
+- `feat:` commits → Minor bump (5.1.0 → 5.2.0)
+- `fix:` commits → Patch bump (5.1.0 → 5.1.1)
+- `BREAKING CHANGE:` → Major bump (5.1.0 → 6.0.0)
 
-- MAJOR: Breaking changes to skill interfaces
-- MINOR: New skills, backward-compatible improvements
-- PATCH: Bug fixes, documentation improvements
+**Files updated automatically:**
+- `.claude-plugin/plugin.json` - Plugin version
+- `CHANGELOG.md` - Generated from commits
+- Git tag (annotated) - `v5.2.0`
+
+**GitHub-hosted plugin workflow:**
+- Company marketplace points to GitHub repo
+- Marketplace reads `plugin.json` directly from repo
+- No manual marketplace.json sync needed
+- Version updates visible immediately after push
 
 ## Acceptance Criteria
 
