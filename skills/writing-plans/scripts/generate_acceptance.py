@@ -1,5 +1,19 @@
 #!/usr/bin/env python3
 """
+⚠️  DEPRECATED: This script is no longer needed.
+
+As of 2025-12-26, acceptance criteria are generated as part of the
+frontmatter in plan files, not as separate JSON files.
+
+Use writing-plans skill to generate plans with acceptance criteria in
+frontmatter instead.
+
+See: skills/writing-plans/docs/acceptance-criteria-schema.md
+
+This script remains for reference but should not be used for new plans.
+
+---
+
 Generate acceptance.json from implementation plan markdown.
 
 Extracts tasks from plan and creates acceptance criteria structure.

@@ -572,31 +572,13 @@ Expected output:
 
 ### Step 3: Generate Acceptance Criteria (Optional)
 
-**Check if user wants acceptance tracking:**
+**⚠️  DEPRECATED:** Acceptance criteria are now generated in frontmatter during plan creation.
 
-Ask: "Would you like to generate acceptance criteria for this plan? (enables regression testing and progress tracking)"
+~~**Check if user wants acceptance tracking:**~~
 
-**If YES:**
+~~Ask: "Would you like to generate acceptance criteria for this plan?"~~
 
-1. **Generate acceptance.json (output path auto-derived):**
-   ```bash
-   python3 ~/.claude/skills/writing-plans/scripts/generate_acceptance.py \
-       --plan-file <working-directory>/llm/implementation-plans/<renamed-file>.md
-   ```
-
-   Output: `<renamed-file>-acceptance.json` (same directory as plan)
-
-2. **Validate generated file:**
-   ```bash
-   ~/.claude/templates/validate-acceptance.sh \
-       <working-directory>/llm/implementation-plans/<renamed-file>-acceptance.json
-   ```
-
-   Expected output: `✓ Validation passed`
-
-**If NO:** Skip this step - acceptance.json can be added later if needed.
-
-**Note:** The `--output` parameter is now optional. If omitted, output path is derived from plan filename.
+**Note:** This step is no longer needed. Acceptance criteria are included in plan frontmatter.
 
 ## Common Mistakes
 
