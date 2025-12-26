@@ -143,6 +143,14 @@ Skills live directly in this repository. To contribute:
 
 See `skills/writing-skills/SKILL.md` for the complete guide.
 
+### Release Tools
+
+Version management uses Commitizen:
+
+```bash
+pipx install commitizen pre-commit
+```
+
 ## Updating
 
 Skills update automatically when you update the plugin:
