@@ -80,7 +80,7 @@ python3 <path-from-step-1> \
 | 0 | Copy from staging (if plan mode) | `cp ~/.claude/plans/<name>.md <working-dir>/llm/...` | Conditional |
 | 1 | Validate frontmatter | `validate-frontmatter.py` | Yes |
 | 2 | Rename with sequence | `rename_jot.py` | Yes |
-| 3 | Generate acceptance | `generate_acceptance.py` | Optional |
+| 3 | ~~Generate acceptance~~ DEPRECATED | ~~generate_acceptance.py~~ | No |
 | 4 | Initialize progress | `initialize_progress.py` | Optional |
 
 ### Then STOP
@@ -209,12 +209,11 @@ writing-plans writes plans only. Never executes them.
 
 ```
 llm/implementation-plans/
-  251217-01-auth-implementation.md
-  251217-01-auth-implementation-acceptance.json
-  251217-01-auth-implementation-progress.md
+  251217-01-auth-implementation.md          # Plan with acceptance in frontmatter
+  251217-01-auth-implementation-progress.md  # Optional progress log
 ```
 
-**Why:** Prevents overwrites when creating multiple plans. Each plan has its own acceptance criteria and progress log.
+**Why:** Prevents overwrites when creating multiple plans. Acceptance criteria are in frontmatter, no separate JSON needed.
 
 ## Path Requirements
 
@@ -664,13 +663,11 @@ Expected output:
 
 ### Path Resolution Issues (generate_acceptance.py)
 
-**Symptom:** ValueError: 'path' is not in the subpath of 'cwd'
+**⚠️  OBSOLETE:** This script is deprecated as of 2025-12-26.
 
-**Cause:** Script attempts to resolve plan path relative to current working directory
+~~**Symptom:** ValueError: 'path' is not in the subpath of 'cwd'~~
 
-**Fixed in:** v3.7.1+ - Now resolves relative to output file's parent directory
-
-**Workaround (older versions):** Run script from the working directory, not from elsewhere
+Acceptance criteria are now in plan frontmatter. No separate generation needed.
 
 ## STOP: Plan Writing Complete
 
