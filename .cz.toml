@@ -1,0 +1,12 @@
+[tool.commitizen]
+name = "cz_conventional_commits"
+version = "5.1.1"
+tag_format = "v$version"
+version_files = [
+    ".claude-plugin/plugin.json:version",
+    "CHANGELOG.md:^## \\[",
+]
+update_changelog_on_bump = true
+changelog_file = "CHANGELOG.md"
+changelog_incremental = true
+annotated_tag = true
