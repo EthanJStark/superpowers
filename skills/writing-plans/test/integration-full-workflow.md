@@ -83,19 +83,7 @@ Expected output:
 ✓ File tracked with file-track
 ```
 
-**Step 7: Optional - Generate acceptance criteria**
-
-Agent asks: "Would you like to generate acceptance criteria for this plan?"
-
-If yes:
-```bash
-python3 ~/.claude/skills/writing-plans/scripts/generate_acceptance.py \
-  --plan-file /Users/[user]/dev/project/llm/implementation-plans/251218-01-create-user-auth.md
-```
-
-Expected output: `251218-01-create-user-auth-acceptance.json` created
-
-**Step 8: Agent stops and reports**
+**Step 7: Agent stops and reports**
 ```
 Plan complete: llm/implementation-plans/251218-01-create-user-auth.md
 

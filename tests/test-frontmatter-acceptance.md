@@ -51,17 +51,18 @@
 
 ---
 
-## Test 4: Verify Deprecation
+## Test 4: Verify Cleanup
 
 **Steps:**
-1. Attempt to run generate_acceptance.py
-2. Verify deprecation notice is shown
-3. Check DEPRECATED.md exists
-4. Verify writing-plans no longer references generation
+1. Verify generate_acceptance.py has been removed
+2. Verify DEPRECATED.md has been removed
+3. Verify writing-plans SKILL.md no longer references deprecated script
+4. Verify .gitignore ignores *-acceptance.json files
 
 **Expected:**
-- Script shows deprecation warning
-- Documentation explains migration path
+- Scripts no longer exist in repository
+- Documentation contains no deprecated references
+- Acceptance.json files are gitignored
 - New workflow uses frontmatter only
 
 ---

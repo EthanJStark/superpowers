@@ -80,8 +80,7 @@ python3 <path-from-step-1> \
 | 0 | Copy from staging (if plan mode) | `cp ~/.claude/plans/<name>.md <working-dir>/llm/...` | Conditional |
 | 1 | Validate frontmatter | `validate-frontmatter.py` | Yes |
 | 2 | Rename with sequence | `rename_jot.py` | Yes |
-| 3 | ~~Generate acceptance~~ DEPRECATED | ~~generate_acceptance.py~~ | No |
-| 4 | Initialize progress | `initialize_progress.py` | Optional |
+| 3 | Initialize progress | `initialize_progress.py` | Optional |
 
 ### Then STOP
 
@@ -569,16 +568,6 @@ Expected output:
 
 **Note:** File tracking is automatic. Use `file-track` (TUI) or `file-track list` to browse created files.
 
-### Step 3: Generate Acceptance Criteria (Optional)
-
-**⚠️  DEPRECATED:** Acceptance criteria are now generated in frontmatter during plan creation.
-
-~~**Check if user wants acceptance tracking:**~~
-
-~~Ask: "Would you like to generate acceptance criteria for this plan?"~~
-
-**Note:** This step is no longer needed. Acceptance criteria are included in plan frontmatter.
-
 ## Common Mistakes
 
 ### Mistake 1: Operating on staging file after copy
@@ -660,14 +649,6 @@ Expected output:
 1. Upgrade to latest plugin version (v5.0.2+)
 2. Manually remove old lock: `rm .writing-plans-active`
 3. Re-run wrapper with --artifact-root parameter (auto-included in v5.0.2+)
-
-### Path Resolution Issues (generate_acceptance.py)
-
-**⚠️  OBSOLETE:** This script is deprecated as of 2025-12-26.
-
-~~**Symptom:** ValueError: 'path' is not in the subpath of 'cwd'~~
-
-Acceptance criteria are now in plan frontmatter. No separate generation needed.
 
 ## STOP: Plan Writing Complete
 
