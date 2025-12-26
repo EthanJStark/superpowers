@@ -185,6 +185,15 @@ writing-plans writes plans only. Never executes them.
    tags: [relevant, tags, here]
    project: PROJECT-KEY  # Optional: e.g., NPCP-2495
    phase: ep001          # Optional: project phase
+   acceptance:
+     - id: criterion-id
+       category: functional
+       description: What to verify
+       steps:
+         - "Step 1: Action"
+         - "Step 2: Verification"
+       passes: false
+       notes: ""
    ---
    ```
 
@@ -312,6 +321,89 @@ Expected: PASS
 git add tests/path/test.py src/path/file.py
 git commit -m "feat: add specific feature"
 ```
+```
+
+## Acceptance Criteria Generation
+
+**When planning, generate detailed acceptance criteria in frontmatter:**
+
+```yaml
+---
+acceptance:
+  - id: derived-from-task-name
+    category: functional  # or style, performance, security
+    description: What this criterion verifies
+    steps:
+      - "Step 1: Specific action to perform"
+      - "Step 2: What to verify"
+      - "Step 3: Expected outcome"
+      - "Step 4: Additional verification"
+      - "Step 5: Final check"
+    passes: false
+    notes: ""
+```
+
+**Generating criteria from tasks:**
+
+For each task in the plan, create 1-2 acceptance criteria:
+
+1. **Functional criterion**: Verifies the feature works end-to-end
+   - Test the happy path
+   - Test error cases
+   - Verify integration points
+
+2. **Quality criterion** (if applicable): Verifies non-functional requirements
+   - Performance benchmarks
+   - Code quality standards
+   - Security requirements
+
+**Step granularity (5-10 steps per criterion):**
+- Each step is one concrete action or verification
+- Include setup steps (start service, navigate to URL)
+- Include positive and negative test cases
+- Include cleanup/verification steps
+
+**Category guidelines:**
+- `functional`: Feature works as specified
+- `style`: UI/UX matches design
+- `performance`: Meets performance requirements
+- `security`: Passes security checks
+
+**Example task → acceptance mapping:**
+
+Task: "Implement JWT authentication endpoint"
+
+Acceptance criteria:
+```yaml
+- id: jwt-auth-endpoint-validation
+  category: functional
+  description: JWT authentication endpoint validates tokens and handles errors
+  steps:
+    - "Step 1: Start server with 'npm run dev'"
+    - "Step 2: Send POST /api/auth/login with missing token"
+    - "Step 3: Verify 400 Bad Request response"
+    - "Step 4: Send request with malformed token"
+    - "Step 5: Verify 401 Unauthorized response"
+    - "Step 6: Send request with expired token"
+    - "Step 7: Verify 401 Unauthorized with 'Token expired' message"
+    - "Step 8: Send request with valid token"
+    - "Step 9: Verify 200 OK with user data"
+    - "Step 10: Verify response includes userId and email"
+  passes: false
+  notes: ""
+
+- id: jwt-auth-security-checks
+  category: security
+  description: JWT endpoint implements security best practices
+  steps:
+    - "Step 1: Attempt request without HTTPS (if enforced)"
+    - "Step 2: Verify appropriate error or redirect"
+    - "Step 3: Send request with injection attempt in token"
+    - "Step 4: Verify token is sanitized/rejected"
+    - "Step 5: Verify rate limiting works (send 100 requests)"
+    - "Step 6: Verify later requests are rate-limited"
+  passes: false
+  notes: ""
 ```
 
 ## Remember
