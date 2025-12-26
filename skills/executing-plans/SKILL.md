@@ -74,6 +74,65 @@ After all tasks complete and verified:
 
 **Don't force through blockers** - stop and ask.
 
+## Progress Tracking
+
+**Reading acceptance criteria:**
+
+Acceptance criteria are in the plan file's frontmatter as the `acceptance` array:
+
+```yaml
+---
+acceptance:
+  - id: feature-verification
+    category: functional
+    description: What to verify
+    steps: [...]
+    passes: false
+    notes: ""
+```
+
+**Updating passes status:**
+
+After verifying all steps for a criterion succeed:
+
+1. Update the `passes` field in frontmatter to `true`
+2. Optionally add execution notes
+3. Commit the change with message: "test: mark [criterion-id] as passing"
+
+**DO NOT:**
+- Modify id, category, description, or steps
+- Remove acceptance criteria
+- Add new criteria during execution
+- Reorder criteria
+
+## Reading Plan Frontmatter
+
+**To read acceptance criteria:**
+
+```python
+import yaml
+
+def read_acceptance_criteria(plan_file_path):
+    """Read acceptance array from plan frontmatter."""
+    with open(plan_file_path, 'r') as f:
+        content = f.read()
+
+    # Split frontmatter from content
+    if not content.startswith('---'):
+        return []
+
+    parts = content.split('---', 2)
+    if len(parts) < 3:
+        return []
+
+    frontmatter = yaml.safe_load(parts[1])
+    return frontmatter.get('acceptance', [])
+```
+
+**To update passes status:**
+
+Use Edit tool to update the specific criterion's `passes` field from `false` to `true`.
+
 ## Remember
 - Review plan critically first
 - Execute all tasks continuously (don't pause between tasks)
