@@ -533,6 +533,37 @@ Follow semantic versioning:
 - MINOR: New skills, backward-compatible improvements
 - PATCH: Bug fixes, documentation improvements
 
+## Acceptance Criteria
+
+**Frontmatter-based acceptance tracking** (as of 2025-12-26):
+
+Acceptance criteria live in plan file frontmatter, not separate JSON files:
+
+```yaml
+---
+acceptance:
+  - id: unique-id
+    category: functional
+    description: What to verify
+    steps:
+      - "Step 1: Action"
+      - "Step 2: Verify result"
+    passes: false
+    notes: ""
+```
+
+**Workflow:**
+1. writing-plans generates acceptance criteria in frontmatter
+2. executing-plans reads and updates criteria from frontmatter
+3. Update only `passes` and `notes` fields during execution
+4. Single source of truth - no separate JSON files
+
+**Deprecated:**
+- `generate_acceptance.py` - no longer needed
+- `acceptance.json` files - replaced by frontmatter
+
+See: `skills/writing-plans/docs/acceptance-criteria-schema.md`
+
 ## Important Notes
 
 **llm/ Directory:**
