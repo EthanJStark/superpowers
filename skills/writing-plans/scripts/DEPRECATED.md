@@ -24,3 +24,10 @@ Acceptance criteria now live in plan frontmatter:
 - No separate files to manage
 
 See: skills/writing-plans/docs/acceptance-criteria-schema.md
+
+## Future Cleanup (v6.0.0+)
+
+Consider removing in future major version:
+- generate_acceptance.py (keep for one major version cycle)
+- acceptance.json support in any tooling
+- References to old workflow in older documentation

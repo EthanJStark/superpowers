@@ -9,3 +9,6 @@ __pycache__/
 
 # Writing-plans lock file
 .writing-plans-active
+
+# Deprecated acceptance.json files
+*-acceptance.json
