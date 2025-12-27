@@ -1,12 +1,23 @@
 [tool.commitizen]
 name = "cz_conventional_commits"
+
+# Current version - must match plugin.json
 version = "5.1.1"
+
+# Git tag format (creates tags like v5.1.1)
 tag_format = "v$version"
+
+# Files to auto-update during version bump
+# Format: "path/to/file:field_or_pattern"
 version_files = [
-    ".claude-plugin/plugin.json:version",
-    "CHANGELOG.md:^## \\[",
+    ".claude-plugin/plugin.json:version",      # Updates "version" field in JSON
+    "CHANGELOG.md:^## \\[",                     # Updates version headers in markdown
 ]
+
+# Automatically generate/update CHANGELOG.md from commits
 update_changelog_on_bump = true
 changelog_file = "CHANGELOG.md"
-changelog_incremental = true
+changelog_incremental = true  # Only add new entries, don't regenerate full history
+
+# Create annotated tags (not lightweight) for better GitHub integration
 annotated_tag = true
