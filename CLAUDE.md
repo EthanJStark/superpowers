@@ -306,6 +306,14 @@ After multiple plugin updates, you may see:
 - **Cause:** Didn't reload plugin or start new session
 - **Fix:** Uninstall → Reinstall → New session
 
+**Issue:** Marketplace version mismatch
+- **Symptom:** `/plugin install` shows old version despite plugin.json being updated
+- **Cause:** Local marketplace manifest not synced during release
+- **Fix:**
+  1. Check plugin version: `jq -r '.version' .claude-plugin/plugin.json`
+  2. Check marketplace version: `jq '.plugins[] | select(.name == "superpowers-fork")' ../../.claude-plugin/marketplace.json`
+  3. Run release script to sync: `./scripts/release.sh` (or manually sync with jq)
+
 #### Stale Plugin Cache Detection
 
 **Symptoms:**
@@ -548,6 +556,21 @@ git push --follow-tags
 - Marketplace reads `plugin.json` directly from repo
 - No manual marketplace.json sync needed
 - Version updates visible immediately after push
+
+**Marketplace Sync (Local Development):**
+
+When releasing via `./scripts/release.sh`, the local marketplace wrapper's manifest is automatically synced:
+- Plugin version updated: `.claude-plugin/plugin.json`
+- Marketplace synced: `../../.claude-plugin/marketplace.json`
+
+**Two-repository workflow:**
+1. `cz bump` commits to plugin repository
+2. Marketplace sync modifies parent repository (not auto-committed)
+3. Follow push instructions to commit both repositories
+
+**GitHub-hosted workflow:**
+- Company marketplace reads `plugin.json` directly from GitHub
+- No separate marketplace sync needed for production deployments
 
 ## Acceptance Criteria
 
