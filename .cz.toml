@@ -10,6 +10,7 @@ tag_format = "v$version"
 # Files to auto-update during version bump
 # Format: "path/to/file:field_or_pattern"
 version_files = [
+    ".cz.toml:version",                        # Updates "version" field in this config
     ".claude-plugin/plugin.json:version",      # Updates "version" field in JSON
     "CHANGELOG.md:^## \\[",                     # Updates version headers in markdown
 ]
