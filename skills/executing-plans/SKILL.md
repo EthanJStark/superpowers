@@ -13,6 +13,17 @@ Load plan, review critically, execute all tasks continuously, report when comple
 
 **Announce at start:** "I'm using the executing-plans skill to implement this plan."
 
+## How This Skill Works
+
+**The Skill tool loads this content synchronously into your context.** You then read and follow these instructions in your current response.
+
+**After invoking the Skill tool:**
+1. Announce you're using this skill
+2. Read the plan file immediately
+3. Start executing per the process below
+
+**Red flag:** Thinking "I'll wait for the skill to complete" means you've misunderstood - YOU execute the plan by following this skill's guidance.
+
 ## The Process
 
 ### Step 1: Load and Review Plan
