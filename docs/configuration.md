@@ -156,3 +156,85 @@ If `artifact_root` is not explicitly set, it's computed from the common prefix o
 ### Future Integration
 
 This integration is currently documentation-only. Full artifact-bridge integration is planned for a future release. The config schema is ready to support it.
+
+## Worktree-Safe Setup
+
+**For users working with git worktrees:** Artifact-bridge provides a centralized storage system that makes artifacts resilient to worktree operations.
+
+### The Problem
+
+When using git worktrees, each worktree has its own working directory. If artifacts are stored directly in `<worktree>/llm/`, you face two issues:
+
+1. **Duplication:** Each worktree has separate `llm/` directories with potentially different content
+2. **Loss on deletion:** Deleting a worktree removes its `llm/` directory and all artifacts
+
+### The Solution: Centralized Artifacts
+
+Artifact-bridge's `repo link` command creates a stable canonical store at `~/.artifacts/repos/<repo_id>/llm` and symlinks each worktree to it:
+
+```bash
+# In your main worktree
+cd ~/dev/my-project
+artifact-bridge repo link
+
+# Link all existing worktrees
+artifact-bridge repo link --all-worktrees
+```
+
+**What happens:**
+1. Generates stable repo ID (survives remote URL changes)
+2. Creates `~/.artifacts/repos/<repo_id>/llm/` (canonical store)
+3. Moves existing `llm/` contents to canonical store
+4. Creates symlink: `<repo>/llm` → `~/.artifacts/repos/<repo_id>/llm`
+
+**Benefits:**
+- **Worktree-safe:** All worktrees share the same artifacts via symlinks
+- **Deletion-safe:** Artifacts survive worktree deletion
+- **Move-safe:** Repo ID persists even if repository moves or remote changes
+
+### Integration with Superpowers Config
+
+Artifact-bridge respects the `artifact_root` field from superpowers config:
+
+```bash
+# If your superpowers config uses artifact_root: "docs"
+# artifact-bridge will use "docs" instead of "llm"
+artifact-bridge repo link  # Creates ~/. artifacts/repos/<repo_id>/docs
+```
+
+**Override if needed:**
+```bash
+artifact-bridge repo link --artifact-root custom
+```
+
+### Checking Link Status
+
+```bash
+# Show current repository's link status
+artifact-bridge repo status
+
+# Example output:
+# Repo ID: github-acme-widgets__a1b2c3
+# Canonical store: ~/.artifacts/repos/github-acme-widgets__a1b2c3/llm
+# Status: ✅ Linked (symlink intact)
+```
+
+### Healing Broken Links
+
+If symlinks break (e.g., after manual directory operations):
+
+```bash
+# Heal current repository
+artifact-bridge repo heal
+
+# Heal all repositories under a directory
+artifact-bridge repo heal --search-root ~/dev
+```
+
+### Recommended Workflow
+
+1. **First-time setup:** Run `artifact-bridge repo link` in your main worktree
+2. **New worktrees:** Run `artifact-bridge repo link` after creating each worktree (or use `--all-worktrees` once)
+3. **Periodic health check:** Run `artifact-bridge repo heal --search-root ~/dev` to catch any issues
+
+This setup ensures your artifacts remain safe and accessible regardless of worktree operations.

@@ -141,6 +141,21 @@ Tests passing (<N> tests, 0 failures)
 Ready to implement <feature-name>
 ```
 
+### 6. Artifact Safety (Optional)
+
+**If using artifact-bridge:** Link the new worktree to centralized artifact storage to prevent artifact loss on worktree deletion:
+
+```bash
+# In the new worktree
+artifact-bridge repo link
+```
+
+This creates a symlink from `llm/` (or configured artifact_root) to the canonical store at `~/.artifacts/repos/<repo_id>/llm`, ensuring all worktrees share the same artifacts.
+
+**Why it matters:** Without this, deleting the worktree will also delete its `llm/` directory and any artifacts created during feature work.
+
+**When to skip:** If you don't use artifact-bridge, or if artifacts are already centralized in the main worktree.
+
 ## Quick Reference
 
 | Situation | Action |
