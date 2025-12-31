@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [5.3.2] - 2025-12-26
+## [5.4.0] - 2025-12-26
 
 ### Added
 - Automated version management with Commitizen
@@ -18,6 +18,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CHANGELOG generation automated from commit history
 
 ## [5.0.0] - 2025-12-19
+
+## v5.4.0 (2025-12-30)
+
+### Feat
+
+- add ws shorthand command for writing-skills
+
+### Fix
+
+- prevent agent from awaiting background process in command skill execution
 
 ## v5.3.2 (2025-12-29)
 
