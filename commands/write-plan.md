@@ -2,4 +2,4 @@
 description: Create detailed implementation plan with bite-sized tasks
 ---
 
-Use the writing-plans skill exactly as written
+Invoke the Skill tool with skill="superpowers-fork:writing-plans" and pass the task description as the args parameter

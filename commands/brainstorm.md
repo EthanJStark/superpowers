@@ -2,4 +2,5 @@
 description: "You MUST use this before any creative work - creating features, building components, adding functionality, or modifying behavior. Explores requirements and design before implementation."
 ---
 
-Use and follow the brainstorming skill exactly as written
+Invoke the Skill tool with skill="superpowers-fork:brainstorming" and pass the task description as the args parameter
+# test

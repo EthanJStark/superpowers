@@ -2,4 +2,4 @@
 description: Execute plan in batches with review checkpoints
 ---
 
-Use the executing-plans skill exactly as written
+Invoke the Skill tool with skill="superpowers-fork:executing-plans" and pass the plan file path as the args parameter
