@@ -12,3 +12,6 @@ __pycache__/
 
 # Deprecated acceptance.json files
 *-acceptance.json
+
+# Personal TDD artifacts (not committed)
+llm/
