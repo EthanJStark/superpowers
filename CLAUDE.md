@@ -498,7 +498,104 @@ description: Use when [trigger] - [what it does] # Appears in skill list
 
 The skill itself indicates which type it is.
 
-## Testing Skills
+## Testing and TDD Workflow
+
+### Test File Locations (Three-Tier Pattern)
+
+**1. Personal TDD Artifacts** (`/llm/` - git-ignored)
+
+During skill development, RED-GREEN-REFACTOR artifacts go here:
+
+```
+llm/skill-tests/
+  skill-name/
+    baseline-results.md         # RED: behavior without skill
+    pressure-scenarios.md       # Test scenarios being run
+    green-phase-results.md      # GREEN: behavior with skill
+    refactor-iteration-1.md     # REFACTOR: closing loopholes
+```
+
+These are personal development artifacts, NOT committed to git.
+
+**2. Reusable Test Scenarios** (`skills/*/test-*.md` - committed)
+
+After TDD complete, extract clean test scenarios:
+
+```
+skills/skill-name/
+  SKILL.md                      # The skill itself
+  test-academic.md              # No-pressure validation
+  test-pressure-1.md            # Primary pressure scenario
+  test-pressure-2.md            # Additional pressures
+  CREATION-LOG.md               # TDD process documentation
+```
+
+These prove skill was tested and allow others to validate it.
+
+**3. Executable Test Infrastructure** (`/tests/` - committed)
+
+Reusable test frameworks and runners:
+
+```
+tests/
+  skill-triggering/             # Framework for testing skill invocation
+    run-all.sh
+  explicit-skill-requests/      # Tests for explicit skill usage
+    run-all.sh
+  subagent-driven-dev/          # Integration test scenarios
+    run-test.sh
+```
+
+Shared test automation that can run in CI/CD. See `tests/README.md` for complete documentation.
+
+### Development Workflow
+
+**When developing a skill:**
+
+1. **RED Phase** - Create pressure scenarios, run baseline tests
+   - Document in `/llm/skill-tests/[skill-name]/`
+   - Capture agent rationalizations and failures
+
+2. **GREEN Phase** - Write/refine skill to address failures
+   - Document test results in `/llm/skill-tests/[skill-name]/`
+   - Iterate until tests pass
+
+3. **REFACTOR Phase** - Close loopholes, tighten language
+   - Document iterations in `/llm/skill-tests/[skill-name]/`
+   - Add pressure tests as new rationalizations found
+
+4. **DISTILL Phase** - Extract clean test scenarios
+   - Create `skills/[skill-name]/test-*.md` files
+   - Create `skills/[skill-name]/CREATION-LOG.md`
+   - Commit test artifacts
+
+5. **VERIFY Phase** - Run committed tests to confirm
+   - Anyone can validate skill using test scenarios
+   - Regression protection for future changes
+
+### What Gets Committed
+
+✅ **Commit to git:**
+- `skills/*/test-*.md` - Clean, reusable test scenarios
+- `skills/*/CREATION-LOG.md` - TDD process summary
+- `tests/` - Executable test infrastructure
+- Skills themselves (`skills/*/SKILL.md`)
+
+❌ **Do NOT commit (git-ignored):**
+- `/llm/skill-tests/` - Personal TDD iteration artifacts
+- Raw subagent transcripts
+- Iteration-by-iteration refinements
+- Personal development notes
+
+### Why This Pattern
+
+- **No git noise** - Messy TDD iterations stay local
+- **Quality signals** - Committed tests prove skill was tested
+- **Reusability** - Others can validate skill behavior
+- **Zero context cost** - Test files don't load until explicitly read
+- **Upstream alignment** - Matches obra/superpowers pattern
+
+### Testing Methodology
 
 **No traditional test suite exists.** Skills are tested using:
 
