@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+- Merged upstream improvements from obra/superpowers (post-Dec 19, 2024)
+- Improved plugin description for better clarity
+- Strengthened using-superpowers skill with explicit invocation guidance
+- Enhanced writing-skills with automation-over-documentation guidance
+- Enhanced receiving-code-review with GitHub thread reply guidance
+- Improved using-git-worktrees with gitignore verification fix
+- Added disable-model-invocation flag to slash commands (prevents auto-invocation)
+
+### Fixed
+- Agent model inheritance in code-reviewer agent
+- Worktree gitignore verification for more reliable checks
+
+### Added
+- New test infrastructure: tests/explicit-skill-requests/ for comprehensive skill invocation testing
+- Multiple test scenarios for validating skill triggering patterns
+
+### Maintenance
+- Integrated upstream bug fixes and documentation updates
+- Preserved fork-specific namespace (superpowers-fork) across all changes
+- Maintained fork identity and version (5.4.2)
+
 ## [5.4.1] - 2025-12-26
 
 ### Added
