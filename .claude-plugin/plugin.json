@@ -1,7 +1,7 @@
 {
   "name": "superpowers-fork",
   "description": "Production-tested fork with writing-plans automation",
-  "version": "5.4.3",
+  "version": "5.4.2",
   "author": {
     "name": "Jesse Vincent & Ethan Stark",
     "email": "jesse@fsck.com"
