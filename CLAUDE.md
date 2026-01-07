@@ -17,21 +17,23 @@ This is a **Claude Code plugin** that provides a core skills library. Unlike tra
 
 ## Branch Strategy
 
-**Main branch serves as source of truth:**
-- Contains company marketplace configuration (marketplace.json)
-- Includes fork-specific plugin identity
+**Main branch is production:**
+- Contains fork-specific plugin identity and company marketplace configuration
 - Company Claude Code marketplace points to this branch
 - Stable and ready for production use
+- Primary development target for fork-specific features
 
-**For upstream contributions:**
-- Create feature branches from main: `pr/NUMBER-cleanup` or `feature/upstream-NAME`
-- Add cleanup commits to remove fork-specific config
-- Submit PR from cleanup branch to obra/superpowers
-- Main branch retains fork identity
-
-**For local development:**
-- Use git worktrees (see Local Development Workflow below)
+**For feature development:**
+- Create feature branches from main: `feature/NAME` or `fix/ISSUE`
+- Use git worktrees for isolation (see Local Development Workflow)
+- Merge back to main when complete
 - Keeps main stable for marketplace while testing changes
+
+**For occasional upstream contributions:**
+- Create branch from main: `upstream/NAME` or `pr/NUMBER-cleanup`
+- Add cleanup commits to remove fork-specific config (marketplace.json, etc.)
+- Submit PR from cleanup branch to obra/superpowers
+- Main branch retains fork identity after PR
 
 ## Development Workflow
 
