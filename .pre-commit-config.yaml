@@ -4,3 +4,11 @@ repos:
     hooks:
       - id: commitizen
         stages: [commit-msg]
+  - repo: local
+    hooks:
+      - id: validate-version-consistency
+        name: Validate version consistency
+        entry: scripts/validate-version-consistency.sh
+        language: system
+        pass_filenames: false
+        stages: [pre-commit]
