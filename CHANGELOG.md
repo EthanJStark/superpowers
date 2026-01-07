@@ -5,43 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## v5.5.0 (2026-01-06)
 
-### Changed
-- Merged upstream improvements from obra/superpowers (post-Dec 19, 2024)
-- Improved plugin description for better clarity
-- Strengthened using-superpowers skill with explicit invocation guidance
-- Enhanced writing-skills with automation-over-documentation guidance
-- Enhanced receiving-code-review with GitHub thread reply guidance
-- Improved using-git-worktrees with gitignore verification fix
-- Added disable-model-invocation flag to slash commands (prevents auto-invocation)
+## v4.0.3 (2025-12-26)
 
-### Fixed
-- Agent model inheritance in code-reviewer agent
-- Worktree gitignore verification for more reliable checks
+## v4.0.2 (2025-12-23)
 
-### Added
-- New test infrastructure: tests/explicit-skill-requests/ for comprehensive skill invocation testing
-- Multiple test scenarios for validating skill triggering patterns
+### Fix
 
-### Maintenance
-- Integrated upstream bug fixes and documentation updates
-- Preserved fork-specific namespace (superpowers-fork) across all changes
-- Maintained fork identity and version (5.4.2)
+- inherit agent model (#144)
+- use git check-ignore for worktree gitignore verification (#160)
 
-## [5.4.1] - 2025-12-26
+## v4.0.1 (2025-12-22)
 
-### Added
-- Automated version management with Commitizen
-- Pre-commit hooks for conventional commit validation
-- Release script for streamlined version bumps
-- GitHub-hosted plugin workflow documentation
+## v5.4.2 (2026-01-04)
 
-### Changed
-- Version bumping now automated based on conventional commits
-- CHANGELOG generation automated from commit history
+### Fix
 
-## [5.0.0] - 2025-12-19
+- update test to check for superpowers-fork namespace
+- use superpowers-fork for session-start hook
+- update skills-core.js to use superpowers-fork namespace
+- remove marketplace.json from plugin directory
 
 ## v5.4.1 (2026-01-01)
 
