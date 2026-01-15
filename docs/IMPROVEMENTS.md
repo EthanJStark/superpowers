@@ -14,7 +14,6 @@ Enhances the existing `writing-plans` skill with executable wrapper scripts that
 
 - **Lock file mechanism** ensures plans exist before coding begins
 - **Git pre-commit hooks** prevent commits without corresponding implementation plans
-- **Shifts from documentation to mechanical constraints** - addresses incidents where agents rationalized away requirements
 
 ### 2. PR Creation Safety Gate
 
@@ -40,19 +39,41 @@ Strengthens skill modification governance with enhanced discoverability and rati
 - **Rationalization counters** against "just adding a section" shortcuts
 - **Clear guidance on TDD treatment vs. quick updates** - when skills need full testing methodology
 
-### 5. Plugin Cache Documentation and Anti-Patterns
+### 5. Graceful Pause/Resume for Plan Execution
 
-Comprehensive documentation of plugin cache behavior and elimination of vulnerable path resolution patterns.
+Adds `/pause` command for graceful interruption during plan execution with easy continuation in fresh sessions.
 
-- **Anti-pattern warnings** for `find ... | head -1` (non-deterministic when multiple cache versions exist)
-- **${CLAUDE_PLUGIN_ROOT} documentation** - session-bound environment variable for safe script paths
-- **Session binding mechanics** - explains why restart is required after updates
-- **Cache diagnostics** - troubleshooting procedures for stale cache detection
-- **Implementation plan cleanup** - replaced all vulnerable patterns with safe alternatives
+- **Structured pause workflow** - completes current task, updates acceptance criteria, commits progress
+- **Resume instructions** - outputs copy-paste command referencing plan and acceptance criteria
+- **Session continuity** - acceptance criteria (passes: true/false) enable skipping completed tasks
+- **Quality preservation** - ensures clean handoff between sessions without losing progress
 
-**Problem solved:** Multi-source documentation failure where implementation plans taught non-deterministic patterns that could select stale plugin cache when multiple versions existed. Research identified that no documentation source explained session binding, cache version conflicts, or diagnostic procedures.
+**Use case:** Long-running implementation plans that span multiple sessions, context management, or when switching focus mid-execution.
 
-**Impact:** Prevents future stale cache bugs by teaching correct patterns and providing troubleshooting tools.
+### 6. Version Consistency Automation
+
+Adds pre-commit hook validation to prevent version drift between `.cz.toml` and `plugin.json`.
+
+- **Automated validation** - runs on every commit to catch mismatches early
+- **Clear error messages** - provides instructions for resolution when versions diverge
+- **Prevention over correction** - blocks commits rather than fixing drift after deployment
+- **Complements release automation** - ensures version bumps propagate correctly
+
+**Problem solved:** Manual version management led to inconsistencies between commitizen configuration and plugin manifest, causing marketplace version mismatches.
+
+**Impact:** Zero-tolerance enforcement prevents version drift at commit time rather than discovering issues during release.
+
+### 7. Test Infrastructure Documentation
+
+Establishes three-tier test artifact pattern with clear separation of concerns.
+
+- **Personal TDD artifacts** (`llm/skill-tests/`) - RED-GREEN-REFACTOR iterations, git-ignored
+- **Reusable test scenarios** (`skills/*/test-*.md`) - Clean test cases, committed for validation
+- **Executable test infrastructure** (`tests/`) - Shared automation frameworks for CI/CD
+- **Zero context cost** - Test files don't load until explicitly read, no performance impact
+- **Upstream alignment** - Matches obra/superpowers test pattern while maintaining fork-specific structure
+
+**Rationale:** Separates messy TDD development artifacts from clean, reusable test scenarios. Personal iteration stays local (no git noise), while committed test scenarios prove skills were tested and enable regression protection.
 
 ## Philosophy
 
