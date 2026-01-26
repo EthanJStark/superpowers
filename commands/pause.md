@@ -7,8 +7,7 @@ description: Pause plan execution gracefully with resume command
 Complete your current in-progress task, then:
 
 1. **Update acceptance criteria** for all completed tasks (passes: true)
-2. **Commit progress** if any AC was updated
-3. **Output resume command** in this exact format:
+2. **Output resume command** in this exact format:
 
 ---
 **Session paused.** To continue in a fresh session, copy-paste:
@@ -22,4 +21,4 @@ RESUME INSTRUCTIONS: Examine plan's acceptance criteria. Tasks with passes: true
 Where $PLAN_PATH is the absolute path to the plan file.
 ---
 
-4. **Stop execution** - do not continue to next task
+3. **Stop execution** - do not continue to next task
