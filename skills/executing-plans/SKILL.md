@@ -67,6 +67,65 @@ After all tasks complete and verified:
 - **REQUIRED SUB-SKILL:** Use superpowers-fork:finishing-a-development-branch
 - Follow that skill to verify tests, present options, execute choice
 
+## Worktree Isolation (If Applicable)
+
+**Detect worktree context:**
+- If plan execution started with "start with a new worktree" instruction
+- OR if currently in `.worktrees/` directory
+- OR if `--worktree` parameter provided
+
+**Then enforce isolation:**
+
+### Before EVERY Task:
+
+1. Run: `pwd`
+2. Store expected path: `WORKTREE_PATH=[absolute-path-to-worktree]`
+3. Verify: Current directory matches `WORKTREE_PATH`
+4. If mismatch: **STOP** and report error:
+   ```
+   ERROR: Worktree context lost!
+   Expected: [WORKTREE_PATH]
+   Current: [pwd]
+
+   You must return to worktree before continuing.
+   Run: cd [WORKTREE_PATH]
+   ```
+
+### After EVERY Task:
+
+1. Output: "✓ Task [N] complete. Working in worktree: [WORKTREE_PATH]"
+2. Run: `pwd`
+3. Verify: Still in worktree path
+4. If not: **STOP** with same error as above
+
+### Multi-Directory Investigation Pattern:
+
+**If you need to investigate other directories:**
+- Reading files from main repo or other repos: **OK** (use absolute paths)
+- Writing files to main repo or other repos: **NOT OK**
+- After investigation: **MUST** return to worktree: `cd [WORKTREE_PATH]`
+
+**Red flag symptoms:**
+- Using absolute paths to main repo: `/Users/user/project/src/...`
+- Should be using relative paths from worktree: `./src/...`
+- If using absolute paths, confirm they're inside worktree
+
+### Example Validation:
+
+```bash
+# Before Task 1
+pwd  # /Users/user/project/.worktrees/feature-x
+
+# Execute Task 1...
+
+# After Task 1
+pwd  # Verify still: /Users/user/project/.worktrees/feature-x
+echo "✓ Task 1 complete. Working in worktree: /Users/user/project/.worktrees/feature-x"
+
+# Before Task 2
+pwd  # Must still be: /Users/user/project/.worktrees/feature-x
+```
+
 ## When to Stop and Ask for Help
 
 **STOP executing immediately when:**
@@ -84,6 +143,24 @@ After all tasks complete and verified:
 - Fundamental approach needs rethinking mid-execution
 
 **Don't force through blockers** - stop and ask.
+
+### Red Flag: Lost Worktree Context
+
+**Symptoms:**
+- Using absolute paths to main repo when in worktree
+- `pwd` shows main repo instead of `.worktrees/[name]`
+- Files being created outside worktree directory
+
+**Recovery:**
+1. Identify expected worktree path
+2. Return: `cd [worktree-path]`
+3. Verify: `pwd` matches worktree path
+4. Resume task execution
+
+**Prevention:**
+- Check `pwd` before each task
+- Use relative paths (`./src/...`) not absolute (`/full/path/...`)
+- After investigation, explicitly return to worktree
 
 ## Progress Tracking
 
