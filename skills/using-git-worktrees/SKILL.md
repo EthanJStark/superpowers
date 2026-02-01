@@ -1,6 +1,6 @@
 ---
 name: using-git-worktrees
-description: Use when starting feature work needing isolation, executing plans, or debugging worktree issues (nested worktrees, wrong paths, already inside worktree, bare repository confusion)
+description: Use when starting feature work needing isolation, executing plans, or debugging worktree issues (nested worktrees, wrong paths, already inside worktree, bare repository confusion). Emphasizes maintaining worktree context throughout session.
 ---
 
 # Using Git Worktrees
@@ -184,6 +184,56 @@ Worktree ready at <full-path>
 Tests passing (<N> tests, 0 failures)
 Ready to implement <feature-name>
 ```
+
+## After Worktree Creation
+
+**Output to user:**
+```
+✓ Worktree created: .worktrees/[branch-name]
+✓ Branch: [branch-name]
+✓ Current directory: [absolute-path-to-worktree]
+
+⚠️  IMPORTANT: Stay in this worktree for the entire session!
+
+Before writing files, always verify: pwd === [worktree-path]
+```
+
+**Store worktree path for validation:**
+- Set context: `ACTIVE_WORKTREE=[absolute-path]`
+- Use for validation throughout session
+
+## Multi-Directory Investigation Pattern
+
+**Scenario:** You need to check files in main repo or other directories during worktree work.
+
+**Safe pattern:**
+
+1. **Read from anywhere:** OK to read files from main repo or other locations
+   ```bash
+   cat /Users/user/project/main-repo/file.txt
+   ```
+
+2. **Write only to worktree:** All file creation/modification must be in worktree
+   ```bash
+   # ✓ CORRECT: Write in worktree
+   echo "content" > ./new-file.txt
+
+   # ✗ WRONG: Write outside worktree
+   echo "content" > /Users/user/project/main-repo/file.txt
+   ```
+
+3. **Return after investigation:** After reading from other directories, return to worktree
+   ```bash
+   # Investigation
+   cd /Users/user/project/other-repo
+   cat some-file.txt
+
+   # MUST return to worktree before continuing work
+   cd /Users/user/project/.worktrees/feature-name
+   pwd  # Verify you're back
+   ```
+
+**Red flag:** If you use `cd` to investigate, you MUST `cd` back to worktree before writing files.
 
 ### 6. Artifact Safety (Optional)
 
