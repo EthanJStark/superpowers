@@ -63,9 +63,57 @@ Execute each task in sequence:
 After all tasks complete and verified:
 - Show what was implemented
 - Show verification output
+- Run post-execution checklist (see below)
 - Announce: "I'm using the finishing-a-development-branch skill to complete this work."
 - **REQUIRED SUB-SKILL:** Use superpowers-fork:finishing-a-development-branch
 - Follow that skill to verify tests, present options, execute choice
+
+## Post-Execution Checklist
+
+**Before reporting completion, verify:**
+
+### Isolation Verification (If Worktree Used):
+
+- [ ] Current directory: `pwd` shows worktree path
+- [ ] All work in worktree: `git status` in worktree shows changes
+- [ ] Main repo clean: `cd [main-repo] && git status` shows no changes
+- [ ] No contamination: `git status` doesn't show unrelated files
+
+**Output to user:**
+```
+✓ All tasks complete
+✓ Working directory: [worktree-path]
+✓ All work isolated in worktree
+✓ Main repository unchanged
+✓ Ready for: git commit, push, PR creation
+```
+
+### General Verification (All Executions):
+
+- [ ] All tasks marked complete in task list
+- [ ] No ERROR or FAIL messages in output
+- [ ] Tests passing (if applicable)
+- [ ] Ready for next step (commit, PR, deploy)
+
+### Example Post-Execution Output:
+
+```
+Executing Plan: Feature Implementation
+Worktree: .worktrees/feature-x
+
+Task 1: Write failing test ✓
+Task 2: Implement feature ✓
+Task 3: Verify tests pass ✓
+
+Post-Execution Checklist:
+✓ Current directory: /Users/user/project/.worktrees/feature-x
+✓ All work in worktree: 3 files modified
+✓ Main repo clean: No changes in /Users/user/project
+✓ No contamination: Only feature-x files present
+✓ Tests passing: All tests green
+
+Ready for: git commit -m "feat: implement feature-x"
+```
 
 ## Worktree Isolation (If Applicable)
 
