@@ -75,6 +75,50 @@ Establishes three-tier test artifact pattern with clear separation of concerns.
 
 **Rationale:** Separates messy TDD development artifacts from clean, reusable test scenarios. Personal iteration stays local (no git noise), while committed test scenarios prove skills were tested and enable regression protection.
 
+### 8. Git Worktrees Enhancements
+
+Extends the `using-git-worktrees` skill with robust pre-flight checks and integration with plan execution.
+
+- **Nested worktree detection** - Compares `git-dir` vs `git-common-dir` to detect if already in a worktree (works from any subdirectory)
+- **Bare repository support** - Detects bare repos and guides all work to worktrees
+- **Absolute path enforcement** - Prevents nested worktree creation from wrong paths
+- **Executing-plans integration** - Post-execution checklist verifies work happened in worktree context
+
+**Problem solved:** Agents creating worktrees from within existing worktrees, causing nested creation at wrong paths. Old `.git` file check only worked at repo root.
+
+### 9. Acceptance Criteria Frontmatter System
+
+Replaces separate JSON files with YAML frontmatter in plan files for acceptance criteria tracking.
+
+- **Single source of truth** - Criteria live in plan file frontmatter, not separate files
+- **Progress tracking** - `passes: true/false` and `notes` fields updated during execution
+- **Session continuity** - Completed tasks (passes: true) skipped in fresh sessions
+- **Validation script** - `validate-frontmatter.py` ensures schema compliance
+
+**Deprecated:** `acceptance.json` files and `generate_acceptance.py` script.
+
+### 10. Configuration System
+
+Adds user-configurable artifact paths with smart defaults.
+
+- **User config** - `~/.config/superpowers/config.json` for artifact path overrides
+- **Smart defaults** - Merges user config with built-in defaults
+- **Session injection** - `config.py --inject` embeds config in session start hook
+- **Artifact root computation** - Auto-computes common prefix from artifact paths
+
+**Use case:** Users with different project structures can customize where plans, designs, and progress files are stored.
+
+### 11. Release Automation
+
+Adds Commitizen-based release workflow with marketplace synchronization.
+
+- **Conventional commits** - Version determined from commit types (feat→minor, fix→patch)
+- **Automated bumping** - `release.sh` handles version bump, changelog, and git tag
+- **Marketplace sync** - Updates local marketplace manifest with new version
+- **Multi-repo coordination** - Provides instructions for syncing both repositories
+
+**Problem solved:** Manual version management led to inconsistencies between plugin and marketplace versions.
+
 ## Philosophy
 
 **Mechanical constraints belong in code, not documentation.** When requirements are 100% objective and programmatically detectable (format, structure, regex-enforceable rules), automate them. Save documentation for judgment calls where human-like reasoning matters.
