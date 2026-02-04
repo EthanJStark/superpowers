@@ -199,6 +199,7 @@ Done!
 ## Red Flags
 
 **Never:**
+- Start implementation on main/master branch without explicit user consent
 - Skip reviews (spec compliance OR code quality)
 - Proceed with unfixed issues
 - Dispatch multiple implementation subagents in parallel (conflicts)
@@ -229,6 +230,7 @@ Done!
 ## Integration
 
 **Required workflow skills:**
+- **superpowers-fork:using-git-worktrees** - REQUIRED: Set up isolated workspace before starting
 - **superpowers-fork:writing-plans** - Creates the plan this skill executes
 - **superpowers-fork:requesting-code-review** - Code review template for reviewer subagents
 - **superpowers-fork:finishing-a-development-branch** - Complete development after all tasks

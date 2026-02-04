@@ -244,6 +244,16 @@ new_string: "    passes: true"
 - Add new criteria during execution
 - Reorder criteria
 
+## Integration
+
+**Required workflow skills:**
+- **superpowers-fork:using-git-worktrees** - REQUIRED: Set up isolated workspace before starting
+- **superpowers-fork:writing-plans** - Creates the plan this skill executes
+- **superpowers-fork:finishing-a-development-branch** - Complete development after all tasks
+
+**Never:**
+- Start implementation on main/master branch without explicit user consent
+
 ## Remember
 - Review plan critically first
 - Execute all tasks continuously (don't pause between tasks)
