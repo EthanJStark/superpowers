@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v5.9.0 (2026-02-04)
+
+### Feat
+
+- merge upstream improvements while preserving fork enhancements
+
+## v5.8.0 (2026-02-01)
+
+### Feat
+
+- **executing-plans**: add post-execution checklist
+- **using-git-worktrees**: emphasize staying in worktree
+- **executing-plans**: add worktree isolation validation
+
+## v5.7.0 (2026-02-01)
+
+### Feat
+
+- add pre-flight checks to using-git-worktrees skill
+
+### Fix
+
+- remove incorrect commit step from pause command
+- improve worktree detection to work from subdirectories
+
 ## v5.6.0 (2026-01-07)
 
 ### Features
