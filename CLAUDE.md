@@ -57,7 +57,15 @@ This is a **Claude Code plugin** that provides a core skills library. Unlike tra
 
 **First time setting up local development? Follow these steps:**
 
-1. **Add the local marketplace wrapper:**
+1. **Install git hooks:**
+   ```bash
+   ./scripts/install-hooks.sh
+   ```
+
+   This installs:
+   - Pre-commit hook: validates `.cz.toml` and `plugin.json` version consistency
+
+2. **Add the local marketplace wrapper:**
    ```bash
    # From parent directory (claude-code-resources/):
    /plugin marketplace add ./superpowers-local-dev
@@ -73,13 +81,13 @@ This is a **Claude Code plugin** that provides a core skills library. Unlike tra
    This registers a marketplace wrapper. The marketplace definition at `superpowers-local-dev/.claude-plugin/marketplace.json`
    contains an absolute path to the plugin directory: `/Users/ethan.stark/dev/claude-code-resources/superpowers`.
 
-2. **Verify marketplace added:**
+3. **Verify marketplace added:**
    ```bash
    /plugin marketplace list
    # Should show: superpowers-local-dev (no errors)
    ```
 
-3. **Install the plugin from your local marketplace:**
+4. **Install the plugin from your local marketplace:**
    ```bash
    /plugin install superpowers-fork@superpowers-local-dev
    ```
