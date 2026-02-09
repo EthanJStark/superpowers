@@ -30,6 +30,25 @@ python3 <path-from-step-1> \
 
 **Note:** Command substitution `$(...)` doesn't work in Bash tool execution environment, so use two-step approach.
 
+### Pre-Flight Check
+
+**First time using writing-plans? Verify dependencies:**
+
+```bash
+# Check required scripts exist
+for script in write_plan.py validate-frontmatter.py rename_jot.py; do
+    if [[ -f "${CLAUDE_PLUGIN_ROOT}/skills/writing-plans/scripts/$script" ]]; then
+        echo "Found: $script"
+    else
+        echo "MISSING: $script - reinstall plugin"
+    fi
+done
+```
+
+**If any script missing:** `claude plugin uninstall renaissance-marketplace@superpowers-fork && claude plugin install renaissance-marketplace@superpowers-fork` then restart Claude Code.
+
+**Optional scripts** (`initialize_progress.py`, `check_lock.py`) — skill works without these; see Post-Write Workflow table for impacts.
+
 ## When NOT to Use
 
 **Don't use writing-plans for:**
@@ -71,16 +90,25 @@ python3 <path-from-step-1> \
 
 **Why two-step is safe:** User manually copies correct path between steps, verifying the selected version before execution.
 
+**Expected output from Step 1:** One absolute path (e.g., `/Users/.../scripts/write_plan.py`)
+
+**If Step 1 returns empty:** Script missing — run pre-flight check, then see Troubleshooting > Missing Script Files.
+
+**If Step 2 errors with "can't open file":** The path from Step 1 was not correctly copied. Re-run Step 1 and verify the path exists.
+
 **Best practice (if available):** Use `${CLAUDE_PLUGIN_ROOT}/skills/writing-plans/scripts/write_plan.py` when environment variable is available.
 
 ### Post-Write Workflow
 
-| Step | Action | Script | Required |
-|------|--------|--------|----------|
-| 0 | Copy from staging (if plan mode) | `cp ~/.claude/plans/<name>.md <working-dir>/llm/...` | Conditional |
-| 1 | Validate frontmatter | `validate-frontmatter.py` | Yes |
-| 2 | Rename with sequence | `rename_jot.py` | Yes |
-| 3 | Initialize progress | `initialize_progress.py` | Optional |
+| Step | Action | Script | Required | If Missing |
+|------|--------|--------|----------|------------|
+| 0 | Copy from staging (if plan mode) | `cp` | Conditional | N/A |
+| 1 | Validate frontmatter | `validate-frontmatter.py` | **Yes** | **STOP** - reinstall plugin |
+| 2 | Rename with sequence | `rename_jot.py` | **Yes** | **STOP** - reinstall plugin |
+| 3 | Initialize progress | `initialize_progress.py` | No | Skip - track progress manually |
+| — | Verify lock state | `check_lock.py` | No | Skip - trust wrapper created lock |
+
+**Required scripts MUST exist.** If missing, do not proceed — see Troubleshooting > Missing Script Files.
 
 ### Then STOP
 
@@ -624,6 +652,26 @@ Expected output:
 
 **Solution:** Use two-step approach (documented throughout skill)
 
+### Missing Script Files
+
+**Symptom:** `python3` fails with "can't open file" or `${CLAUDE_PLUGIN_ROOT}` path check shows file not found
+
+**Diagnosis:**
+```bash
+ls ${CLAUDE_PLUGIN_ROOT}/skills/writing-plans/scripts/
+```
+If directory empty or missing: plugin installation is incomplete.
+
+**Solution:**
+```bash
+claude plugin uninstall renaissance-marketplace@superpowers-fork
+claude plugin marketplace update renaissance-marketplace
+claude plugin install renaissance-marketplace@superpowers-fork
+# CRITICAL: Restart Claude Code (session caches plugin paths)
+```
+
+**Verification:** Re-run pre-flight check from Overview section.
+
 ### Lock File Issues
 
 **Symptom:** "Lock file not found" or permission errors
@@ -713,6 +761,13 @@ After saving the plan, offer execution choice:
 3. Git hook (catches violations at commit time)
 
 ## Version History
+
+### v5.10.0 (2026-02-09)
+- Added pre-flight check for script dependencies in Overview section
+- Extended troubleshooting with missing script file diagnosis and resolution
+- Extended Post-Write Workflow table with "If Missing" column and degraded mode guidance
+- Added error handling notes to Quick Reference Invoke Wrapper section
+- Based on lessons from code-reviewer postmortem (dbt-data-shares, 2026-02-09)
 
 ### v5.1.1 (2025-12-23)
 - Fixed: Lock files (.writing-plans-active) now created in artifact_root (llm/) instead of repo root
