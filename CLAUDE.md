@@ -53,129 +53,95 @@ This is a **Claude Code plugin** that provides a core skills library. Unlike tra
 
 ### Local Plugin Development
 
-#### Initial Setup (One-Time)
+This plugin is **GitHub-hosted** and published to the **renaissance-marketplace**. For complete development workflow documentation, see:
 
-**First time setting up local development? Follow these steps:**
+**Source of Truth:** `/Users/ethan.stark/dev/ren/claude-code-marketplace/CONTRIBUTING.md`
 
-1. **Install git hooks:**
-   ```bash
-   ./scripts/install-hooks.sh
-   ```
+#### Quick Start (Testing Local Changes)
 
-   This installs:
-   - Pre-commit hook: validates `.cz.toml` and `plugin.json` version consistency
+**Fastest way to test local changes** using `--plugin-dir`:
 
-2. **Add the local marketplace wrapper:**
-   ```bash
-   # From parent directory (claude-code-resources/):
-   /plugin marketplace add ./superpowers-local-dev
-
-   # OR from main repo directory (superpowers/):
-   /plugin marketplace add ../superpowers-local-dev
-   ```
-
-   **Important:**
-   - The **command path** (what you type) should be **relative** starting with `./` or `../`
-   - The **source field** in `marketplace.json` should use an **absolute path** to avoid path traversal security errors
-
-   This registers a marketplace wrapper. The marketplace definition at `superpowers-local-dev/.claude-plugin/marketplace.json`
-   contains an absolute path to the plugin directory: `/Users/ethan.stark/dev/claude-code-resources/superpowers`.
-
-3. **Verify marketplace added:**
-   ```bash
-   /plugin marketplace list
-   # Should show: superpowers-local-dev (no errors)
-   ```
-
-4. **Install the plugin from your local marketplace:**
-   ```bash
-   /plugin install superpowers-fork@superpowers-local-dev
-   ```
-
-**Why a wrapper directory?** The main repo's `.claude-plugin/marketplace.json` contains plugin publish metadata (for renaissance-marketplace), not marketplace definition. Claude Code requires marketplace definition at `.claude-plugin/marketplace.json`, so we use a separate wrapper directory to avoid conflicts.
-
-#### Quick Start (Daily Workflow)
-
-When developing superpowers locally and testing changes in Claude Code:
-
-1. **Edit skills** in your local superpowers clone (e.g., `~/dev/claude-code-resources/superpowers/skills/`)
-2. **Commit changes** to your branch (e.g., `integration/v4-consolidated`)
-3. **Reload plugin** to reflect changes in Claude Code (paste both lines):
-   ```bash
-   /plugin uninstall superpowers-fork@superpowers-local-dev
-   /plugin install superpowers-fork@superpowers-local-dev
-   ```
-4. **Test changes** in a new Claude Code session
-
-**Important:** Plugin changes only take effect after reload. Skills are loaded at session start, so existing sessions won't see updates.
-
-#### Switching Between Local and Marketplace Versions
-
-**Your plugin identifiers:**
-- `superpowers-fork@renaissance-marketplace` - Company marketplace version (published)
-- `superpowers-fork@superpowers-local-dev` - Local development version (wrapper pointing to this repo)
-
-**Switch TO local development:**
 ```bash
-/plugin uninstall superpowers-fork@renaissance-marketplace
-/plugin install superpowers-fork@superpowers-local-dev
-# Then start new session
+# 1. Uninstall marketplace version to avoid conflicts
+claude plugin uninstall superpowers-fork@renaissance-marketplace
+
+# 2. Start Claude Code with local plugin directory
+claude --plugin-dir /Users/ethan.stark/dev/claude-code-resources/superpowers
+
+# 3. Test your changes (e.g., /ws, /brainstorm should work)
+
+# 4. When done testing, reinstall marketplace version
+claude plugin install superpowers-fork@renaissance-marketplace
 ```
 
-**Switch BACK to marketplace:**
-```bash
-/plugin uninstall superpowers-fork@superpowers-local-dev
-/plugin install superpowers-fork@renaissance-marketplace
-# Then start new session
-```
+**Why uninstall marketplace version first?**
+- Plugin name collision: Both versions have the same name
+- Undefined precedence: Not clear which version loads when names conflict
+- `${CLAUDE_PLUGIN_ROOT}`: May point to wrong version
+- Skill namespace conflicts: `/skill-name` may invoke wrong version
 
-**After editing local skills:**
-```bash
-# Commit changes (optional but recommended)
-git add -A && git commit -m "your changes"
+#### Daily Development Workflow
 
-# Reload plugin (paste both lines together):
-/plugin uninstall superpowers-fork@superpowers-local-dev
-/plugin install superpowers-fork@superpowers-local-dev
+When developing skills locally:
 
-# Start new Claude Code session to see changes
-```
+1. **Edit skills** in your local clone
+2. **Exit Claude Code** if running
+3. **Start with `--plugin-dir`** to test changes:
+   ```bash
+   claude --plugin-dir /Users/ethan.stark/dev/claude-code-resources/superpowers
+   ```
+4. **Test your changes** - skills/commands/agents should reflect latest code
+5. **Iterate** - edit, restart with `--plugin-dir`, test
+6. **Commit and push** when satisfied
+7. **Reinstall marketplace version** when done:
+   ```bash
+   claude plugin install superpowers-fork@renaissance-marketplace
+   ```
 
-#### When to Uninstall/Reinstall vs Restart
+**Important:** Changes take effect immediately with `--plugin-dir` on each restart (no uninstall/reinstall needed).
 
-**How plugin caching works:**
-- Plugin code is cached when installed - changes to source files don't automatically reflect
+#### Publishing Changes
+
+After pushing to GitHub:
+
+1. **Update version** in `.claude-plugin/plugin.json` (use `./scripts/release.sh`)
+2. **Push changes and tags** to GitHub
+3. **Marketplace auto-fetches** the new version from GitHub
+4. **Users update** with:
+   ```bash
+   /plugin marketplace update renaissance-marketplace
+   /plugin install superpowers-fork@renaissance-marketplace
+   # Restart Claude Code
+   ```
+
+#### Plugin Loading Behavior
+
+**Using `--plugin-dir` (local development):**
+- Changes take effect immediately on each restart
+- No caching - reads directly from source directory
+- No uninstall/reinstall needed
+- Fastest iteration cycle
+
+**Using installed plugins (marketplace):**
+- Plugin code is cached when installed
 - **Session binding:** Each session locks to specific cache directory on startup
-- Skills are loaded at session start - they need a new session to reload
-- Uninstall/reinstall forces cache refresh and reloads components
-- **Restart alone is NOT sufficient** - must have new cache to bind to
+- Skills are loaded at session start - need new session to reload
+- Uninstall/reinstall forces cache refresh
 
-**⚠️ CRITICAL: Restart is ALWAYS required after plugin changes**
-
-"Restart alone is NOT sufficient - you need uninstall/reinstall"
-
-**Why:** Claude Code sessions bind to plugin cache on startup. Even after cache updates:
-- Running sessions remain bound to old cache
-- New files/changes won't appear until restart
-- `${CLAUDE_PLUGIN_ROOT}` continues pointing to old location
-
-**Workflow:** Uninstall → Reinstall → Restart → Verify
-
-**Decision matrix:**
-
-| Scenario | Action | Why |
-|----------|--------|-----|
-| Changed skill content in source directory | Uninstall → Reinstall → Restart mandatory | Source changes don't affect cache; must propagate to cache and rebind session |
-| Plugin update from marketplace | Uninstall → Reinstall → Restart mandatory | New cache created; must bind new session to it |
-| Testing same skill twice | Restart (new session) | Rebind to ensure clean state |
-| Switching between marketplace and local | Uninstall old → Install new → Restart mandatory | Different plugin identities require cache invalidation |
-| Plugin not appearing in `/help` | Uninstall → Reinstall → Restart mandatory | Metadata not loaded; must clear and rebind |
-| Script path not found error | Check ${CLAUDE_PLUGIN_ROOT}, then Uninstall → Reinstall → Restart | May be bound to stale cache |
-
-**Always paste both commands together:**
+**Workflow for testing local changes:**
 ```bash
-/plugin uninstall superpowers@superpowers-dev
-/plugin install superpowers@superpowers-dev
+# Exit Claude Code
+claude --plugin-dir /path/to/superpowers
+# Test changes, exit when done
+claude plugin install superpowers-fork@renaissance-marketplace
+```
+
+**Workflow for marketplace updates:**
+```bash
+/plugin marketplace update renaissance-marketplace
+/plugin uninstall superpowers-fork@renaissance-marketplace
+/plugin install superpowers-fork@renaissance-marketplace
+# Restart Claude Code
 ```
 
 ### Path Resolution Anti-Patterns
@@ -304,25 +270,26 @@ After multiple plugin updates, you may see:
 
 #### Troubleshooting
 
-**Issue:** Plugin error in `/doctor` output
-- **Cause:** Stale plugin reference in `~/.claude/settings.json`
-- **Fix:** Edit settings.json and remove the stale `enabledPlugins` entry
+**Issue:** `/ws` or other slash commands not working
+- **Cause:** Using marketplace version that doesn't have the latest commands
+- **Fix:** Test with `--plugin-dir` or wait for marketplace update after pushing
+
+**Issue:** Skills don't update after editing
+- **Cause:** Testing with installed marketplace version instead of `--plugin-dir`
+- **Fix:** Uninstall marketplace version, use `claude --plugin-dir /path/to/superpowers`
 
 **Issue:** Script path not found (e.g., `write_plan.py`)
 - **Cause:** Plugin not installed or cache cleared
 - **Fix:** Reinstall plugin from marketplace
 
-**Issue:** Skills don't update after editing
-- **Cause:** Didn't reload plugin or start new session
-- **Fix:** Uninstall → Reinstall → New session
+**Issue:** Plugin not appearing in marketplace
+- **Symptom:** Plugin missing from `renaissance-marketplace` after push
+- **Fix:** Check GitHub Actions deployment, check marketplace catalog refresh
 
 **Issue:** Marketplace version mismatch
-- **Symptom:** `/plugin install` shows old version despite plugin.json being updated
-- **Cause:** Local marketplace manifest not synced during release
-- **Fix:**
-  1. Check plugin version: `jq -r '.version' .claude-plugin/plugin.json`
-  2. Check marketplace version: `jq '.plugins[] | select(.name == "superpowers-fork")' ../../.claude-plugin/marketplace.json`
-  3. Run release script to sync: `./scripts/release.sh` (or manually sync with jq)
+- **Symptom:** Marketplace shows old version despite pushing new version to GitHub
+- **Cause:** Marketplace hasn't fetched latest from GitHub yet
+- **Fix:** Wait for marketplace auto-update or contact marketplace maintainer
 
 #### Stale Plugin Cache Detection
 
@@ -351,16 +318,23 @@ find ~/.claude/plugins/cache -type d -name "superpowers-fork" -exec stat -f "%Sm
 **Resolution:**
 
 If `${CLAUDE_PLUGIN_ROOT}` points to stale version:
-1. Uninstall plugin: `/plugin uninstall superpowers-fork@superpowers-local-dev`
-2. Reinstall plugin: `/plugin install superpowers-fork@superpowers-local-dev`
+1. **For local development:** Exit and restart with `--plugin-dir`:
+   ```bash
+   claude --plugin-dir /Users/ethan.stark/dev/claude-code-resources/superpowers
+   ```
+2. **For marketplace version:** Uninstall and reinstall:
+   ```bash
+   /plugin uninstall superpowers-fork@renaissance-marketplace
+   /plugin install superpowers-fork@renaissance-marketplace
+   ```
 3. Start new session (existing session still bound to old cache)
 4. Verify: `echo $CLAUDE_PLUGIN_ROOT` should show new directory
 
 **Prevention:**
 
 - Always use `${CLAUDE_PLUGIN_ROOT}/path/to/script` instead of `find ... | head -1`
-- Follow uninstall → reinstall → restart cycle for all updates
-- Paste both uninstall and install commands together to prevent partial updates
+- For local development: use `--plugin-dir` to avoid cache entirely
+- For marketplace: follow uninstall → reinstall → restart cycle for updates
 
 #### Cache Version Mismatch Detection
 
@@ -659,25 +633,20 @@ git push --follow-tags
 - Git tag (annotated) - `v5.2.0`
 
 **GitHub-hosted plugin workflow:**
-- Company marketplace points to GitHub repo
+
+This plugin uses the **GitHub-hosted** deployment model:
+- Company marketplace (`renaissance-marketplace`) points to this GitHub repo
 - Marketplace reads `plugin.json` directly from repo
-- No manual marketplace.json sync needed
-- Version updates visible immediately after push
+- No manual marketplace manifest sync needed
+- Version updates visible to users after push to GitHub
 
-**Marketplace Sync (Local Development):**
+**Release workflow:**
+1. Run `./scripts/release.sh` - auto-determines version, updates `.claude-plugin/plugin.json`
+2. Push changes and tags to GitHub: `git push --follow-tags`
+3. Marketplace auto-fetches new version from GitHub
+4. Users update with `/plugin marketplace update renaissance-marketplace`
 
-When releasing via `./scripts/release.sh`, the local marketplace wrapper's manifest is automatically synced:
-- Plugin version updated: `.claude-plugin/plugin.json`
-- Marketplace synced: `../../.claude-plugin/marketplace.json`
-
-**Two-repository workflow:**
-1. `cz bump` commits to plugin repository
-2. Marketplace sync modifies parent repository (not auto-committed)
-3. Follow push instructions to commit both repositories
-
-**GitHub-hosted workflow:**
-- Company marketplace reads `plugin.json` directly from GitHub
-- No separate marketplace sync needed for production deployments
+**No separate marketplace repository needed** - the marketplace fetches directly from this repo's GitHub releases.
 
 ## Acceptance Criteria
 
