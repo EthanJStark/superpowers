@@ -308,7 +308,7 @@ python3 <path-from-step-1> <working-dir> <file-path>
 
 ## Task Structure
 
-```markdown
+````markdown
 ### Task N: [Component Name]
 
 **Files:**
@@ -347,7 +347,7 @@ Expected: PASS
 git add tests/path/test.py src/path/file.py
 git commit -m "feat: add specific feature"
 ```
-```
+````
 
 ## Acceptance Criteria Generation
 
